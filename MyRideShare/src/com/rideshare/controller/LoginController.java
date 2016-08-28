@@ -8,6 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Session;
+
+import com.rideshare.utils.HelloExample;
+import com.rideshare.utils.HibernateUtil;
+
 /**
  * Servlet implementation class LoginController
  */
@@ -34,6 +39,10 @@ public class LoginController extends HttpServlet {
 		String password = request.getParameter("password");
 		System.out.println("username : " + username);
 		System.out.println("password : " + password);
+		HelloExample obj = new HelloExample();
+		obj.runMe("mkyong");
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		System.out.println("isConnected : " + session.isConnected());
 	}
 
 	/**

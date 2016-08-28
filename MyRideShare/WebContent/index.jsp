@@ -7,7 +7,11 @@
 <title>My Ride Share</title>
 </head>
 <body>
-this is a test.
-this is first check.
+	<h2>Uase Login</h2>
+	<form action="" method="get">
+	User Name : <input type="text" name="user" id="user"><br>
+	Password : <input type="text" name="password" id="password"><br>
+	<input type="submit" value="Log In">	
+	</form>
 </body>
 </html>

@@ -8,9 +8,9 @@
 </head>
 <body>
 	<h2>Uase Login</h2>
-	<form action="" method="get">
-	User Name : <input type="text" name="user" id="user"><br>
-	Password : <input type="text" name="password" id="password"><br>
+	<form action="LoginController" method="get">
+	User Name : <input type="text" name="user" id="username"><br>
+	Password : <input type="password" name="password" id="password"><br>
 	<input type="submit" value="Log In">	
 	</form>
 </body>

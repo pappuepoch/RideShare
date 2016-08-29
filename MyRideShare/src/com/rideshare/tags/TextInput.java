@@ -10,13 +10,14 @@ import javax.servlet.jsp.tagext.SimpleTagSupport;
 public class TextInput extends SimpleTagSupport {
 	String name;
 	String size;
+	String value;
 	StringWriter sw = new StringWriter();
 
 	public void doTag() throws JspException, IOException // render custom tag
 	{
 		JspWriter out = getJspContext().getOut();
-
-		out.write(String.format("<input type='text' id='%s' name='%s' size='%s' />", name, name, size));
+		String val = (value==null||"".equals(value))?"":value;
+		out.write(String.format("<input type='text' id='%s' name='%s' size='%s' value='%s' />", name, name, size, val));
 	}
 
 	public String getName() {
@@ -33,6 +34,14 @@ public class TextInput extends SimpleTagSupport {
 
 	public void setSize(String size) {
 		this.size = size;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 }

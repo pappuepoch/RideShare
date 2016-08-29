@@ -51,11 +51,11 @@ public class SignUpController extends HttpServlet {
 		String email = request.getParameter("email");
 		String gender = request.getParameter("gender");
 		String zipcode = request.getParameter("zipcode");
-		String birthyear = request.getParameter("zipcode");
+		String birthyear = request.getParameter("birthyear");
 		String street = request.getParameter("street");
 		String state = request.getParameter("state");
 
-		DBService dbs = new DBService();
+		DBService dbs = new DBService(request, response);
 		dbs.insertUser(fullname, gender, state, city, street, zipcode, birthyear, email, password);
 
 	}

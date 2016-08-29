@@ -2,6 +2,7 @@ package com.rideshare.controller;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,6 +13,8 @@ import org.hibernate.Session;
 
 import com.rideshare.services.DBService;
 import com.rideshare.utils.HibernateUtil;
+
+import jdk.nashorn.internal.ir.RuntimeNode.Request;
 
 /**
  * Servlet implementation class LoginController
@@ -35,14 +38,7 @@ public class LoginController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		String username = request.getParameter("user");
-		String password = request.getParameter("password");
-		System.out.println("username : " + username);
-		System.out.println("password : " + password);
-		DBService dbs = new DBService();
-		dbs.getUserList();
-		//Session session = HibernateUtil.getSessionFactory().openSession();
-		//System.out.println("isConnected : " + session.isConnected());
+		
 	}
 
 	/**
@@ -51,7 +47,17 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		String username = request.getParameter("user");
+		String password = request.getParameter("password");
+		DBService dbs = new DBService(request, response);
+		RequestDispatcher rd;
+		
+		if(dbs.checkLogin(username, password)){
+			rd = request.getRequestDispatcher("user_home.jsp");
+		}else{
+			rd = request.getRequestDispatcher("index.jsp");
+		}
+		rd.forward(request, response);
 	}
 
 }

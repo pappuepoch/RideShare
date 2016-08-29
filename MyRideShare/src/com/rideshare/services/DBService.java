@@ -4,6 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -12,15 +16,25 @@ import com.rideshare.dao.DAO_Service;
 import com.rideshare.model.Users;
 import com.rideshare.utils.HibernateUtil;
 import com.rideshare.utils.ProjectUtils;
+import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
 
 public class DBService {
 	final static Logger logger = Logger.getLogger(DBService.class);
+	HttpServletRequest request; HttpServletResponse response;
+	HttpSession session;
+	ProjectUtils pu;
+	public DBService(HttpServletRequest request, HttpServletResponse response) {
+		// TODO Auto-generated constructor stub
+		this.request=request;
+		this.response= response;
+		this.session = request.getSession(false);
+		this.pu = new ProjectUtils();
+	}
 
 	public void insertUser(String fullname, String sGender, String state, String city, String street, String sZipcode,
 			String sBirthyear, String email, String password) {
 
 		logger.debug("insertUser started");
-		ProjectUtils pu = new ProjectUtils();
 		int gender = (sGender != null) ? Integer.parseInt(sGender) : 0;
 		int zipcode = (sZipcode != null) ? Integer.parseInt(sZipcode) : 0;
 		int birthyear = (sBirthyear != null) ? Integer.parseInt(sBirthyear) : 0;
@@ -36,38 +50,66 @@ public class DBService {
 			logger.debug("Error @ insertUser : "+e);
 			e.printStackTrace();
 		}
-
-
-
-		/*Query q = session.createQuery("From Users ");
-
-			List<Users> resultList = q.list();
-			System.out.println("num of users:" + resultList.size());
-			for (Users next : resultList) {
-				System.out.println("next user: " + next);
-				logger.debug("next user: " + next);
-			}*/
-
-
-
 	}
 	public List<Users> getUserList() {
-
 		logger.debug("getUserList started");
-		ProjectUtils pu = new ProjectUtils();
-
 		String query = "From Users ";
 		DAO_Service daos = new DAO_Service();
 		List<Users> resultList = daos.getResultList(query);
-
-
 		System.out.println("num of users:" + resultList.size());
 		for (Users next : resultList) {
 			System.out.println("next user: " + next);
 			logger.debug("next user: " + next);
 		}
-
 		return resultList;
+	}
+	public boolean checkLogin(String email,String password){
+		logger.debug("checkLogin started");
+		String query = "From Users ";
+		DAO_Service daos = new DAO_Service();
+		List<Users> resultList = daos.getResultList(query);
+		System.out.println("num of users:" + resultList.size());
+		for (Users next : resultList) {
+			System.out.println("next user: " + next);
+			if(email.equals(next.getEmail())){
+				String md5pw;
+				try {
+					logger.debug("User: "+ next.getEmail()+", checked with # "+email);
+					md5pw = pu.convertToMd5(password);
+					if(md5pw.equals(next.getPassword())){
+						logger.debug("Login Successful");
+						this.session.setAttribute("users", next);
+						this.session.setAttribute("loginStatus", true);
+						return true;
+					}
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					logger.debug("Cannot convert to MD5 : "+ e);
+					e.printStackTrace();
+				}
+				
+			}
+			logger.debug("next user: " + next);
+		}
+		return false;
+	}
 
+	public boolean updateProfile(String fullname, String gender, String state, String city, String street, String zipcode,
+			String birthyear, String email, String password) {
+		// TODO Auto-generated method stub
+		Users users = (Users)this.session.getAttribute("users");
+		users.setBirthyear((birthyear!=null)?Integer.parseInt(birthyear):users.getGender());
+		users.setCity(city);
+		//users.setEmail(email);
+		users.setDateupdated(new Date());
+		users.setFullname(fullname);
+		users.setGender((gender!=null)?Integer.parseInt(gender):users.getGender());
+		//users.setPassword(pu.convertToMd5(password));
+		users.setState(state);
+		users.setStreet(street);
+		users.setZipcode((zipcode!=null)?Integer.parseInt(zipcode):users.getZipcode());
+		DAO_Service daos = new DAO_Service();
+		return daos.saveOrUpdate(users);
+		
 	}
 }

@@ -11,7 +11,7 @@
 <body>
 	<ctg:currentDateTime color="#9F81F7" size='20px'/>
 	<h2>Uase Login</h2>
-	<form action="LoginController" method="get">
+	<form action="LoginController" method="post">
 	User Name : <input type="text" name="user" id="username"><br>
 	Password : <input type="password" name="password" id="password"><br>
 	<input type="submit" value="Log In">	

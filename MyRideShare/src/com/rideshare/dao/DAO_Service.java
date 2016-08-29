@@ -23,10 +23,25 @@ public class DAO_Service {
 			logger.debug("saveData : "+o.toString());
 			session.save(o);
 			session.getTransaction().commit();
-			
+			session.close();
 			return true;
 		}
-		logger.debug("saveData cannot save "+o.toString());
+		logger.debug("saveData fail "+o.toString());
+		return false;
+	}
+	public boolean saveOrUpdate(Object o){
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		if (session.isConnected()) {
+
+			session.beginTransaction();
+
+			logger.debug("saveOrUpdate : "+o.toString());
+			session.saveOrUpdate(o);
+			session.getTransaction().commit();
+			session.close();
+			return true;
+		}
+		logger.debug("saveOrUpdate fail "+o.toString());
 		return false;
 	}
 	public <T> List<T> getResultList(String query){
@@ -36,11 +51,12 @@ public class DAO_Service {
 		Query q = session.createQuery(query);
 
 		List<T> resultList = q.list();
-		/*System.out.println("num of users:" + resultList.size());
+		System.out.println("num of users:" + resultList.size());
 		for (T next : resultList) {
 			System.out.println("next user: " + next);
 			logger.debug("next user: " + next);
-		}*/
+		}
+		session.close();
 		return resultList;
 		}
 		logger.debug("getResultList cannot perform "+query);

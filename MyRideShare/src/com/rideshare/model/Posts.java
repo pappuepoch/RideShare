@@ -95,4 +95,10 @@ public class Posts implements java.io.Serializable {
 		this.dateupdated = dateupdated;
 	}
 
+	@Override
+	public String toString() {
+		return "Posts [postid=" + postid + ", userid=" + userid + ", post=" + post + ", posttype=" + posttype
+				+ ", datecreated=" + datecreated + ", dateupdated=" + dateupdated + "]";
+	}
+
 }

@@ -17,6 +17,8 @@ if(users==null){
 <body>
 	<h1>This is your home page!</h1>
 	Welcome <%=users.getFullname() %><br>
-	<a href="editProfile">Edit Profile</a>
+	<a href="editProfile">Edit Profile</a><br>
+	<a href="postController">Submit a post</a><br>
+	<a href="postActivityController">view all post</a>
 </body>
 </html>

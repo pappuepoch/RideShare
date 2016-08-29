@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 28, 2016 5:05:00 PM by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.rideshare.model.Users" table="users" catalog="sql9133240">
+        <id name="userid" type="java.lang.Integer">
+            <column name="userid" />
+            <generator class="identity" />
+        </id>
+        <property name="fullname" type="string">
+            <column name="fullname" length="100" not-null="true" />
+        </property>
+        <property name="gender" type="int">
+            <column name="gender" not-null="true" />
+        </property>
+        <property name="state" type="string">
+            <column name="state" length="50" not-null="true" />
+        </property>
+        <property name="city" type="string">
+            <column name="city" length="50" not-null="true" />
+        </property>
+        <property name="street" type="string">
+            <column name="street" length="50" not-null="true" />
+        </property>
+        <property name="zipcode" type="int">
+            <column name="zipcode" not-null="true" />
+        </property>
+        <property name="birthyear" type="int">
+            <column name="birthyear" not-null="true" />
+        </property>
+        <property name="email" type="string">
+            <column name="email" length="100" not-null="true" />
+        </property>
+        <property name="password" type="string">
+            <column name="password" length="50" not-null="true" />
+        </property>
+        <property name="datecreated" type="timestamp">
+            <column name="datecreated" length="19" not-null="true" />
+        </property>
+        <property name="dateupdated" type="timestamp">
+            <column name="dateupdated" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

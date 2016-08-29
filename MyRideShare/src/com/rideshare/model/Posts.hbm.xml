@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated Aug 28, 2016 5:05:00 PM by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.rideshare.model.Posts" table="posts" catalog="sql9133240">
+        <id name="postid" type="java.lang.Integer">
+            <column name="postid" />
+            <generator class="identity" />
+        </id>
+        <property name="userid" type="int">
+            <column name="userid" not-null="true" />
+        </property>
+        <property name="post" type="string">
+            <column name="post" length="65535" not-null="true" />
+        </property>
+        <property name="posttype" type="int">
+            <column name="posttype" not-null="true" />
+        </property>
+        <property name="datecreated" type="timestamp">
+            <column name="datecreated" length="19" not-null="true" />
+        </property>
+        <property name="dateupdated" type="timestamp">
+            <column name="dateupdated" length="19" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

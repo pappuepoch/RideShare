@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.hibernate.Session;
 
+import com.rideshare.services.DBService;
 import com.rideshare.utils.HibernateUtil;
 
 /**
@@ -38,8 +39,10 @@ public class LoginController extends HttpServlet {
 		String password = request.getParameter("password");
 		System.out.println("username : " + username);
 		System.out.println("password : " + password);
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		System.out.println("isConnected : " + session.isConnected());
+		DBService dbs = new DBService();
+		dbs.getUserList();
+		//Session session = HibernateUtil.getSessionFactory().openSession();
+		//System.out.println("isConnected : " + session.isConnected());
 	}
 
 	/**

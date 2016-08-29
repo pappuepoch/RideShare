@@ -1,5 +1,6 @@
 package com.rideshare.services;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
@@ -9,10 +10,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.rideshare.dao.DAO_Service;
+import com.rideshare.model.Posts;
 import com.rideshare.model.Users;
 import com.rideshare.utils.HibernateUtil;
 import com.rideshare.utils.ProjectUtils;
@@ -31,6 +34,45 @@ public class DBService {
 		this.pu = new ProjectUtils();
 	}
 
+	public boolean insertPost(int posttype, String post) throws UnsupportedEncodingException {
+
+		logger.debug("insertPost started");
+		Users user = (Users)this.session.getAttribute("users");
+		Posts posts = new Posts(user.getUserid(), post, posttype, new Date(), new Date());
+		logger.debug("insertPost posts"+ posts.toString());
+		DAO_Service daos = new DAO_Service();
+		return daos.saveData(posts);
+	}
+	public List<Posts> getPostList() {
+		logger.debug("getPostList started");
+		//String query = "From Posts ORDER BY  `posts`.`dateupdated` DESC";
+		DAO_Service daos = new DAO_Service();
+		List<Posts> resultList = daos.getOrderedPostList("DESC","dateupdated");
+		//List<Posts> resultList = daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
+		
+		this.request.setAttribute("posts", resultList);
+		System.out.println("num of Posts:" + resultList.size());
+		/*ObjectMapper mapper = new ObjectMapper();
+		try {
+			logger.debug("JSON Test: "+mapper.writeValueAsString(resultList));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			logger.debug("Cannot Convert To JSON : "+e);
+		}
+		for (Posts next : resultList) {	
+			System.out.println("next Posts: " + next);
+			logger.debug("next Posts: " + next);
+			try {
+				logger.debug("JSON Test: "+mapper.writeValueAsString(next));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				logger.debug("Cannot Convert To JSON : "+e);
+			}
+		}*/
+		return resultList;
+	}
 	public void insertUser(String fullname, String sGender, String state, String city, String street, String sZipcode,
 			String sBirthyear, String email, String password) {
 

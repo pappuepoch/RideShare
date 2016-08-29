@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 
 import com.rideshare.services.DBService;
@@ -22,6 +23,7 @@ import jdk.nashorn.internal.ir.RuntimeNode.Request;
 @WebServlet("/LoginController")
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	final static Logger logger = Logger.getLogger(LoginController.class);
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -47,11 +49,11 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String username = request.getParameter("user");
+		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		DBService dbs = new DBService(request, response);
 		RequestDispatcher rd;
-		
+		logger.debug("LoginController");
 		if(dbs.checkLogin(username, password)){
 			rd = request.getRequestDispatcher("user_home.jsp");
 		}else{

@@ -38,7 +38,7 @@ public class EditProfile extends HttpServlet {
 		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
-			rd = request.getRequestDispatcher("edit_profile.jsp");
+			rd = request.getRequestDispatcher("views/edit_profile.jsp");
 		}
 		rd.forward(request, response);
 	}
@@ -64,7 +64,7 @@ public class EditProfile extends HttpServlet {
 			String state = request.getParameter("state");
 			DBService dbs = new DBService(request, response);
 			if(dbs.updateProfile(fullname, gender, state, city, street, zipcode, birthyear, email, password)){
-				rd = request.getRequestDispatcher("edit_profile.jsp");
+				rd = request.getRequestDispatcher("views/edit_profile.jsp");
 			}else{
 				rd = request.getRequestDispatcher("error.jsp");
 			}

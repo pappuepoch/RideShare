@@ -1,6 +1,7 @@
 package com.rideshare.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
+import com.rideshare.model.Posts;
 import com.rideshare.services.DBService;
 
 /**
@@ -43,9 +46,16 @@ public class PostActivityController extends HttpServlet {
 		if(loginStatus){
 			logger.debug("postActivityController : post inserted");
 			DBService dbs = new DBService(request, response);
-			dbs.getPostList();
+			List<Posts> posts = dbs.getPostList();
 			rd = request.getRequestDispatcher("user_post.jsp");
+			ObjectMapper mapper = new ObjectMapper();
+			/*response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			logger.debug("commentsController JSON : "+mapper.writeValueAsString(posts));
+			response.getWriter().print(mapper.writeValueAsString(posts));
+			return;*/
 		}
+		
 		rd.forward(request, response);
 	}
 

@@ -12,7 +12,7 @@
 
 </head>
 <body>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){ 
             $('#getComments').click(function(){
@@ -45,6 +45,21 @@
                 });
                 return false;
             });//likeCountPostId
+            $('#getPost').click(function(){
+                //var postid=$("#postid").val();
+                //alert(postid);
+                $.ajax({
+                    url:'postActivityController',
+                    type:'get',
+                    //data:{postid:postid},
+                    dataType: 'json',
+                    success: function(data) {
+                        console.log(data);
+                    }
+                    
+                });
+                return false;
+            });//likeCountPostId
             
     });
 </script>
@@ -64,14 +79,18 @@ if(posts==null){
 		Post :<c:out value="${post.getPost()}" /><br>
 		Post Time: <c:out value="${post.getDateupdated()}" /><br>
 		Post By:<c:out value="${post.getUserid()}" /><br><br>
+		<%-- Like Counter : <ctg:postLikeCount postid="${post.getPostid()}"/> <br> --%>
 		<form action="postActivityController" method="post" >
 			<input type="hidden" name="postid" value="${post.getPostid()}">
 			<input type="hidden" name="cmd" value="del">
 			<input type="submit" value="Delete Post" />
 		</form>
+		<form action="postActivityController" method="get" >
+			<input type="submit" id="getPost" value="get Post" />
+		</form>
 		<form action="likesController" method="get" >
-			<input type="hidden" id="likeCountPostId" name="postid" value="${post.getPostid()}">
-			<input type="submit" value="Likes Count" />
+			<input type="hidden" id="postid" name="postid" value="${post.getPostid()}">
+			<input type="submit" id="likeCountPostId" value="Likes Count" />
 		</form>
 		<form action="likesController" method="post" >
 			<input type="hidden" name="postid" value="${post.getPostid()}">

@@ -1,7 +1,9 @@
 package com.rideshare.controller;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rideshare.dao.DAO_Service;
 import com.rideshare.model.Comments;
@@ -47,6 +50,15 @@ public class LikesController extends HttpServlet {
 		//dbs.getPostList();
 		int likesCount = dbs.getLikesCountByPostId(postid);
 		logger.debug("LikesController likesCount : "+likesCount);
+		Map<String, Integer> likeCount = new LinkedHashMap<>();
+		likeCount.put("likeCount", likesCount);
+		
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+		ObjectMapper mapper = new ObjectMapper();
+		logger.debug("likesController JSON : "+mapper.writeValueAsString(likeCount));
+		response.getWriter().print(mapper.writeValueAsString(likeCount));
+		return;
 		//return likesCount;
 	}
 

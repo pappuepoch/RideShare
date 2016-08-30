@@ -15,6 +15,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.rideshare.dao.DAO_Service;
+import com.rideshare.model.Comments;
+import com.rideshare.model.Likes;
 import com.rideshare.model.Posts;
 import com.rideshare.model.Users;
 import com.rideshare.utils.HibernateUtil;
@@ -34,8 +36,18 @@ public class DBService {
 		this.pu = new ProjectUtils();
 	}
 
+	public boolean insertComments(int postid, String comment) {
+		logger.debug("insertComments started");
+		Users users = (Users)this.session.getAttribute("users");
+		if(users!=null){
+			Comments comments = new Comments(users.getUserid(), postid, comment, new Date(), new Date());
+			DAO_Service daos = new DAO_Service();
+			daos.saveData(comments);
+			return true;
+		}
+		return false;
+	}
 	public boolean insertPost(int posttype, String post) throws UnsupportedEncodingException {
-
 		logger.debug("insertPost started");
 		Users user = (Users)this.session.getAttribute("users");
 		Posts posts = new Posts(user.getUserid(), post, posttype, new Date(), new Date());
@@ -105,6 +117,18 @@ public class DBService {
 		}
 		return resultList;
 	}
+	public int getLikesCountByPostId(int postid) {
+		logger.debug("getLikesCountByPostId started");
+		String query = "From Users ";
+		DAO_Service daos = new DAO_Service();
+		List<Likes> resultList = daos.getLikesByPostId(postid,"DESC","dateupdated");
+		System.out.println("num of users:" + resultList.size());
+		for (Likes next : resultList) {
+			System.out.println("next user: " + next);
+			logger.debug("next user: " + next);
+		}
+		return resultList.size();
+	}
 	public boolean checkLogin(String email,String password){
 		logger.debug("checkLogin started");
 		String query = "From Users ";
@@ -152,6 +176,35 @@ public class DBService {
 		users.setZipcode((zipcode!=null)?Integer.parseInt(zipcode):users.getZipcode());
 		DAO_Service daos = new DAO_Service();
 		return daos.saveOrUpdate(users);
+		
+	}
+
+	public List getCommentsByPostId(int postid) {
+		// TODO Auto-generated method stub
+		logger.debug("getCommentsByPostId started");
+		DAO_Service daos = new DAO_Service();
+		List<Comments> resultList = daos.getCommentsListByPostId(postid,"DESC","dateupdated");
+		//List<Posts> resultList = daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
+		this.request.setAttribute("comments", resultList);
+		System.out.println("num of comments:" + resultList.size());
+		return resultList;
+	}
+
+	public boolean insertLikes(int postid) {
+		logger.debug("insertLikes started");
+		Users user = (Users)this.session.getAttribute("users");
+		Likes likes = new Likes(user.getUserid(), postid, new Date(), new Date());
+		logger.debug("insertLikes likes"+ likes.toString());
+		DAO_Service daos = new DAO_Service();
+		return daos.saveData(likes);
+		
+	}
+
+	public void delLikes(int postid) {
+		logger.debug("delLikes started");
+		Users users = (Users)this.session.getAttribute("users");
+		DAO_Service daos = new DAO_Service();
+		daos.delLikes(users.getUserid(),postid);
 		
 	}
 }

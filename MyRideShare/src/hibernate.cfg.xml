@@ -21,6 +21,8 @@
     <property name="current_session_context_class">thread</property>
     <mapping class="com.rideshare.model.Users" />
     <mapping class="com.rideshare.model.Posts" />  
+    <mapping class="com.rideshare.model.Comments" />  
+    <mapping class="com.rideshare.model.Likes" />
  
 <!--      <mapping class="com.mastertheboss.domain.Employee" />
      <mapping class="com.mastertheboss.domain.Department" /> -->

@@ -84,4 +84,10 @@ public class Likes implements java.io.Serializable {
 		this.dateupdated = dateupdated;
 	}
 
+	@Override
+	public String toString() {
+		return "Likes [likeid=" + likeid + ", userid=" + userid + ", postid=" + postid + ", datecreated=" + datecreated
+				+ ", dateupdated=" + dateupdated + "]";
+	}
+
 }

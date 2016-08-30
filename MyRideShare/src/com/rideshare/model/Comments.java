@@ -95,4 +95,10 @@ public class Comments implements java.io.Serializable {
 		this.dateupdated = dateupdated;
 	}
 
+	@Override
+	public String toString() {
+		return "Comments [commentid=" + commentid + ", userid=" + userid + ", postid=" + postid + ", comment=" + comment
+				+ ", datecreated=" + datecreated + ", dateupdated=" + dateupdated + "]";
+	}
+
 }

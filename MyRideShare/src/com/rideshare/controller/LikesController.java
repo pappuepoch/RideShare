@@ -56,6 +56,8 @@ public class LikesController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		logger.debug("LikesController : doPost() Started");
+		boolean xcmd = (request.getAttribute("xcmd")==null)?false:(boolean)request.getAttribute("xcmd");
+		if(xcmd)doGet(request, response);
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
 		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
@@ -72,6 +74,7 @@ public class LikesController extends HttpServlet {
 			if("del".equals(cmd)){
 				dbs.delLikes(postid);
 			}
+			request.setAttribute("xcmd", true);
 			rd = request.getRequestDispatcher("postActivityController");
 		}
 		rd.forward(request, response);

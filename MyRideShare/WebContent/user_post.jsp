@@ -34,6 +34,11 @@ if(posts==null){
 		</form>
 		<form action="likesController" method="post" >
 			<input type="hidden" name="postid" value="${post.getPostid()}">
+			<input type="hidden" name="cmd" value="add">
+			<input type="submit" value="Likes" />
+		</form>
+		<form action="likesController" method="post" >
+			<input type="hidden" name="postid" value="${post.getPostid()}">
 			<input type="hidden" name="cmd" value="del">
 			<input type="submit" value="Dislikes" />
 		</form>

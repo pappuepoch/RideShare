@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
@@ -39,7 +40,14 @@ public class LoginController extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		boolean loginStatus = false;
+		HttpSession session = request.getSession();
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
+		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		if(loginStatus){
+			rd = request.getRequestDispatcher("user_home.jsp");
+		}
+		rd.forward(request, response);
 		
 	}
 
@@ -56,9 +64,12 @@ public class LoginController extends HttpServlet {
 		logger.debug("LoginController");
 		if(dbs.checkLogin(username, password)){
 			rd = request.getRequestDispatcher("user_home.jsp");
+			logger.debug("LoginController: user_home");
 		}else{
 			rd = request.getRequestDispatcher("index.jsp");
+			logger.debug("LoginController: index");
 		}
+		
 		rd.forward(request, response);
 	}
 

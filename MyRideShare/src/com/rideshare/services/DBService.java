@@ -25,21 +25,23 @@ import com.sun.org.apache.xml.internal.resolver.helpers.Debug;
 
 public class DBService {
 	final static Logger logger = Logger.getLogger(DBService.class);
-	HttpServletRequest request; HttpServletResponse response;
+	HttpServletRequest request;
+	HttpServletResponse response;
 	HttpSession session;
 	ProjectUtils pu;
+
 	public DBService(HttpServletRequest request, HttpServletResponse response) {
 		// TODO Auto-generated constructor stub
-		this.request=request;
-		this.response= response;
+		this.request = request;
+		this.response = response;
 		this.session = request.getSession(false);
 		this.pu = new ProjectUtils();
 	}
 
 	public boolean insertComments(int postid, String comment) {
 		logger.debug("insertComments started");
-		Users users = (Users)this.session.getAttribute("users");
-		if(users!=null){
+		Users users = (Users) this.session.getAttribute("users");
+		if (users != null) {
 			Comments comments = new Comments(users.getUserid(), postid, comment, new Date(), new Date());
 			DAO_Service daos = new DAO_Service();
 			daos.saveData(comments);
@@ -47,44 +49,40 @@ public class DBService {
 		}
 		return false;
 	}
+
 	public boolean insertPost(int posttype, String post) throws UnsupportedEncodingException {
 		logger.debug("insertPost started");
-		Users user = (Users)this.session.getAttribute("users");
+		Users user = (Users) this.session.getAttribute("users");
 		Posts posts = new Posts(user.getUserid(), post, posttype, new Date(), new Date());
-		logger.debug("insertPost posts"+ posts.toString());
+		logger.debug("insertPost posts" + posts.toString());
 		DAO_Service daos = new DAO_Service();
 		return daos.saveData(posts);
 	}
+
 	public List<Posts> getPostList() {
 		logger.debug("getPostList started");
-		//String query = "From Posts ORDER BY  `posts`.`dateupdated` DESC";
+		// String query = "From Posts ORDER BY `posts`.`dateupdated` DESC";
 		DAO_Service daos = new DAO_Service();
-		List<Posts> resultList = daos.getOrderedPostList("DESC","dateupdated");
-		//List<Posts> resultList = daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
-		
+		List<Posts> resultList = daos.getOrderedPostList("DESC", "dateupdated");
+		// List<Posts> resultList =
+		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
+
 		this.request.setAttribute("posts", resultList);
 		System.out.println("num of Posts:" + resultList.size());
-		/*ObjectMapper mapper = new ObjectMapper();
-		try {
-			logger.debug("JSON Test: "+mapper.writeValueAsString(resultList));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
-			logger.debug("Cannot Convert To JSON : "+e);
-		}
-		for (Posts next : resultList) {	
-			System.out.println("next Posts: " + next);
-			logger.debug("next Posts: " + next);
-			try {
-				logger.debug("JSON Test: "+mapper.writeValueAsString(next));
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-				logger.debug("Cannot Convert To JSON : "+e);
-			}
-		}*/
+		/*
+		 * ObjectMapper mapper = new ObjectMapper(); try { logger.debug(
+		 * "JSON Test: "+mapper.writeValueAsString(resultList)); } catch
+		 * (IOException e) { // TODO Auto-generated catch block
+		 * //e.printStackTrace(); logger.debug("Cannot Convert To JSON : "+e); }
+		 * for (Posts next : resultList) { System.out.println("next Posts: " +
+		 * next); logger.debug("next Posts: " + next); try { logger.debug(
+		 * "JSON Test: "+mapper.writeValueAsString(next)); } catch (IOException
+		 * e) { // TODO Auto-generated catch block //e.printStackTrace();
+		 * logger.debug("Cannot Convert To JSON : "+e); } }
+		 */
 		return resultList;
 	}
+
 	public void insertUser(String fullname, String sGender, String state, String city, String street, String sZipcode,
 			String sBirthyear, String email, String password) {
 
@@ -95,16 +93,16 @@ public class DBService {
 
 		Users user;
 		try {
-			user = new Users(fullname, gender, state, city, street, zipcode, birthyear, email, pu.convertToMd5(password),
-					new Date(), new Date());
+			user = new Users(fullname, gender, state, city, street, zipcode, birthyear, email,
+					pu.convertToMd5(password), new Date(), new Date());
 			DAO_Service daos = new DAO_Service();
 			daos.saveData(user);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			logger.debug("Error @ insertUser : "+e);
+			logger.debug("Error @ insertUser : " + e);
 			e.printStackTrace();
 		}
 	}
+
 	public List<Users> getUserList() {
 		logger.debug("getUserList started");
 		String query = "From Users ";
@@ -117,11 +115,12 @@ public class DBService {
 		}
 		return resultList;
 	}
+
 	public int getLikesCountByPostId(int postid) {
 		logger.debug("getLikesCountByPostId started");
 		String query = "From Users ";
 		DAO_Service daos = new DAO_Service();
-		List<Likes> resultList = daos.getLikesByPostId(postid,"DESC","dateupdated");
+		List<Likes> resultList = daos.getLikesByPostId(postid, "DESC", "dateupdated");
 		System.out.println("num of users:" + resultList.size());
 		for (Likes next : resultList) {
 			System.out.println("next user: " + next);
@@ -129,7 +128,8 @@ public class DBService {
 		}
 		return resultList.size();
 	}
-	public boolean checkLogin(String email,String password){
+
+	public boolean checkLogin(String email, String password) {
 		logger.debug("checkLogin started");
 		String query = "From Users ";
 		DAO_Service daos = new DAO_Service();
@@ -137,12 +137,12 @@ public class DBService {
 		System.out.println("num of users:" + resultList.size());
 		for (Users next : resultList) {
 			System.out.println("next user: " + next);
-			if(email.equals(next.getEmail())){
+			if (email.equals(next.getEmail())) {
 				String md5pw;
 				try {
-					logger.debug("User: "+ next.getEmail()+", checked with # "+email);
+					logger.debug("User: " + next.getEmail() + ", checked with # " + email);
 					md5pw = pu.convertToMd5(password);
-					if(md5pw.equals(next.getPassword())){
+					if (md5pw.equals(next.getPassword())) {
 						logger.debug("Login Successful");
 						this.session.setAttribute("users", next);
 						this.session.setAttribute("loginStatus", true);
@@ -150,41 +150,42 @@ public class DBService {
 					}
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
-					logger.debug("Cannot convert to MD5 : "+ e);
+					logger.debug("Cannot convert to MD5 : " + e);
 					e.printStackTrace();
 				}
-				
+
 			}
 			logger.debug("next user: " + next);
 		}
 		return false;
 	}
 
-	public boolean updateProfile(String fullname, String gender, String state, String city, String street, String zipcode,
-			String birthyear, String email, String password) {
+	public boolean updateProfile(String fullname, String gender, String state, String city, String street,
+			String zipcode, String birthyear, String email, String password) {
 		// TODO Auto-generated method stub
-		Users users = (Users)this.session.getAttribute("users");
-		users.setBirthyear((birthyear!=null)?Integer.parseInt(birthyear):users.getGender());
+		Users users = (Users) this.session.getAttribute("users");
+		users.setBirthyear((birthyear != null) ? Integer.parseInt(birthyear) : users.getGender());
 		users.setCity(city);
-		//users.setEmail(email);
+		// users.setEmail(email);
 		users.setDateupdated(new Date());
 		users.setFullname(fullname);
-		users.setGender((gender!=null)?Integer.parseInt(gender):users.getGender());
-		//users.setPassword(pu.convertToMd5(password));
+		users.setGender((gender != null) ? Integer.parseInt(gender) : users.getGender());
+		// users.setPassword(pu.convertToMd5(password));
 		users.setState(state);
 		users.setStreet(street);
-		users.setZipcode((zipcode!=null)?Integer.parseInt(zipcode):users.getZipcode());
+		users.setZipcode((zipcode != null) ? Integer.parseInt(zipcode) : users.getZipcode());
 		DAO_Service daos = new DAO_Service();
 		return daos.saveOrUpdate(users);
-		
+
 	}
 
 	public List getCommentsByPostId(int postid) {
 		// TODO Auto-generated method stub
 		logger.debug("getCommentsByPostId started");
 		DAO_Service daos = new DAO_Service();
-		List<Comments> resultList = daos.getCommentsListByPostId(postid,"DESC","dateupdated");
-		//List<Posts> resultList = daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
+		List<Comments> resultList = daos.getCommentsListByPostId(postid, "DESC", "dateupdated");
+		// List<Posts> resultList =
+		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
 		this.request.setAttribute("comments", resultList);
 		System.out.println("num of comments:" + resultList.size());
 		return resultList;
@@ -192,27 +193,27 @@ public class DBService {
 
 	public boolean insertLikes(int postid) {
 		logger.debug("insertLikes started");
-		Users user = (Users)this.session.getAttribute("users");
+		Users user = (Users) this.session.getAttribute("users");
 		Likes likes = new Likes(user.getUserid(), postid, new Date(), new Date());
-		logger.debug("insertLikes likes"+ likes.toString());
+		logger.debug("insertLikes likes" + likes.toString());
 		DAO_Service daos = new DAO_Service();
 		return daos.saveData(likes);
-		
+
 	}
 
 	public void delLikes(int postid) {
 		logger.debug("delLikes started");
-		Users users = (Users)this.session.getAttribute("users");
+		Users users = (Users) this.session.getAttribute("users");
 		DAO_Service daos = new DAO_Service();
-		daos.delLikes(users.getUserid(),postid);
-		
+		daos.delLikes(users.getUserid(), postid);
+
 	}
 
 	public void delPost(int postid) {
 		logger.debug("delPost started");
-		Users users = (Users)this.session.getAttribute("users");
+		Users users = (Users) this.session.getAttribute("users");
 		DAO_Service daos = new DAO_Service();
-		daos.delPostById(users.getUserid(),postid);
-		
+		daos.delPostById(users.getUserid(), postid);
+
 	}
 }

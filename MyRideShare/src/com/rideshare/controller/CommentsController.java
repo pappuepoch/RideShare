@@ -41,7 +41,7 @@ public class CommentsController extends HttpServlet {
 		logger.debug("commentsController Started");
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			//String comments = request.getParameter("comments");
@@ -69,7 +69,7 @@ public class CommentsController extends HttpServlet {
 		//doGet(request, response);
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			String comments = request.getParameter("comments");

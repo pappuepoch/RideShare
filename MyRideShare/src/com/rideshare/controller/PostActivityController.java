@@ -38,7 +38,7 @@ public class PostActivityController extends HttpServlet {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			logger.debug("postActivityController : post inserted");
@@ -57,16 +57,21 @@ public class PostActivityController extends HttpServlet {
 		logger.debug("PostActivityController : doPost() Started");
 		boolean loginStatus = false;
 		String cmd = request.getParameter("cmd");
+		boolean xcmd = (request.getAttribute("xcmd")!=null)?(boolean)request.getAttribute("xcmd"):false;
+		if(xcmd){
+			doGet(request, response);
+		}
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			String sPostId = request.getParameter("postid");
 			int postid = (sPostId==null)?0:Integer.parseInt(sPostId);
-			logger.debug("PostActivityController : delLike() postid : "+postid+", cmd "+cmd);
+			logger.debug("PostActivityController : delPost() postid : "+postid+", cmd "+cmd);
 			DBService dbs = new DBService(request, response);
 			if("del".equals(cmd)){
 				dbs.delPost(postid);
+				request.setAttribute("xcmd", true);
 			}
 			rd = request.getRequestDispatcher("postActivityController");
 		}

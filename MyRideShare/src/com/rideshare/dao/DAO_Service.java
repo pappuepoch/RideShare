@@ -167,8 +167,13 @@ public class DAO_Service {
 			return false;
 		}
 	}
-	public void delPostById(Integer userid, int postid) {
-		// TODO Auto-generated method stub
+	public boolean delPostById(Integer userid, int postid) {
+		logger.debug("delLikes Started");
+		List<Posts> posts = session.createCriteria(Posts.class).add(Restrictions.eq("userid",userid)).add(Restrictions.eq("postid",postid)).list();
+		if(posts.size()>0){
+			return delete(posts.get(0));
+		}
+		return false;
 		
 	}
 	

@@ -39,7 +39,7 @@ public class PostController extends HttpServlet {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			rd = request.getRequestDispatcher("post.jsp");
@@ -56,7 +56,7 @@ public class PostController extends HttpServlet {
 		logger.debug("PostController : doPost");
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			String post = (String)request.getParameter("post");

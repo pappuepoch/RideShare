@@ -35,7 +35,7 @@ public class EditProfile extends HttpServlet {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			rd = request.getRequestDispatcher("edit_profile.jsp");
@@ -47,20 +47,21 @@ public class EditProfile extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String fullname = request.getParameter("fullname");
-		String city = request.getParameter("city");
-		String password = request.getParameter("password");
-		String email = request.getParameter("email");
-		String gender = request.getParameter("gender");
-		String zipcode = request.getParameter("zipcode");
-		String birthyear = request.getParameter("birthyear");
-		String street = request.getParameter("street");
-		String state = request.getParameter("state");
+		
 		boolean loginStatus = false;
 		HttpSession session = request.getSession();
-		loginStatus = (boolean)session.getAttribute("loginStatus");
+		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
+			String fullname = request.getParameter("fullname");
+			String city = request.getParameter("city");
+			String password = request.getParameter("password");
+			String email = request.getParameter("email");
+			String gender = request.getParameter("gender");
+			String zipcode = request.getParameter("zipcode");
+			String birthyear = request.getParameter("birthyear");
+			String street = request.getParameter("street");
+			String state = request.getParameter("state");
 			DBService dbs = new DBService(request, response);
 			if(dbs.updateProfile(fullname, gender, state, city, street, zipcode, birthyear, email, password)){
 				rd = request.getRequestDispatcher("edit_profile.jsp");

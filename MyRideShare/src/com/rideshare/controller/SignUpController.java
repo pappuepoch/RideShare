@@ -57,6 +57,8 @@ public class SignUpController extends HttpServlet {
 
 		DBService dbs = new DBService(request, response);
 		dbs.insertUser(fullname, gender, state, city, street, zipcode, birthyear, email, password);
+		RequestDispatcher rd = request.getRequestDispatcher("user_home.jsp");
+		rd.forward(request, response);
 
 	}
 

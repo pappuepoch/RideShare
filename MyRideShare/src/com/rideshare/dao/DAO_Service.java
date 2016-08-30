@@ -159,5 +159,9 @@ public class DAO_Service {
 			return false;
 		}
 	}
+	public void delPostById(Integer userid, int postid) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

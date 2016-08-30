@@ -207,4 +207,12 @@ public class DBService {
 		daos.delLikes(users.getUserid(),postid);
 		
 	}
+
+	public void delPost(int postid) {
+		logger.debug("delPost started");
+		Users users = (Users)this.session.getAttribute("users");
+		DAO_Service daos = new DAO_Service();
+		daos.delPostById(users.getUserid(),postid);
+		
+	}
 }

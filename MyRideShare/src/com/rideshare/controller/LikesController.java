@@ -64,8 +64,6 @@ public class LikesController extends HttpServlet {
 		if(loginStatus){
 			String sPostId = request.getParameter("postid");
 			int postid = (sPostId==null)?0:Integer.parseInt(sPostId);
-//			String sLikeId = request.getParameter("likeid");
-//			int likeid = (sPostId==null)?0:Integer.parseInt(sLikeId);
 			logger.debug("LikesController : delLike() postid : "+postid+", cmd "+cmd);
 			DBService dbs = new DBService(request, response);
 			if("add".equals(cmd)){

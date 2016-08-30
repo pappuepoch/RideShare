@@ -54,7 +54,23 @@ public class PostActivityController extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		doGet(request, response);
+		logger.debug("PostActivityController : doPost() Started");
+		boolean loginStatus = false;
+		String cmd = request.getParameter("cmd");
+		HttpSession session = request.getSession();
+		loginStatus = (boolean)session.getAttribute("loginStatus");
+		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
+		if(loginStatus){
+			String sPostId = request.getParameter("postid");
+			int postid = (sPostId==null)?0:Integer.parseInt(sPostId);
+			logger.debug("PostActivityController : delLike() postid : "+postid+", cmd "+cmd);
+			DBService dbs = new DBService(request, response);
+			if("del".equals(cmd)){
+				dbs.delPost(postid);
+			}
+			rd = request.getRequestDispatcher("postActivityController");
+		}
+		rd.forward(request, response);
 	}
 
 }

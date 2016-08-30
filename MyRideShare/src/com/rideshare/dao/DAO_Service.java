@@ -144,10 +144,18 @@ public class DAO_Service {
 	public boolean delLikes(Integer userid, int postid) {
 		// TODO Auto-generated method stub
 		logger.debug("delLikes Started");
+		List<Likes> likes = session.createCriteria(Likes.class).add(Restrictions.eq("userid",userid)).add(Restrictions.eq("postid",postid)).list();
+		if(likes.size()>0){
+			return delete(likes.get(0));
+		}
+		return false;
+	}
+	
+	public boolean delete(Object o){
+		logger.debug("delete : "+o.toString());
 		try {
 			session.beginTransaction();
-			Likes likes =(Likes) session.createCriteria(Likes.class).add(Restrictions.eq("userid",userid)).add(Restrictions.eq("postid",postid)).list().get(0);
-			session.delete(likes);
+			session.delete(o);
 			session.getTransaction().commit();
 			session.close();
 			return true;

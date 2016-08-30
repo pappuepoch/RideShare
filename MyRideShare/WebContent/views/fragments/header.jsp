@@ -2,14 +2,14 @@
 		<div class="container-fluid">
 		
 			<div class="navbar-header">
-      			<a class="navbar-brand" href="#">Car Pooling </a>
+      			<a class="navbar-brand" href="LoginController">Car Pooling </a>
     		</div>
     		
     		<ul class="nav navbar-nav">
     		
-    			<li><a href="../index.jsp">Home</a></li>
-                <li><a href="../index.jsp#sevices">Service</a></li>
-                <li><a href="../index.jsp#contact">Contact Us</a></li>
+    			<li><a href="#">Home</a></li>
+                <li><a href="/index.jsp#sevices">Service</a></li>
+                <li><a href="/index.jsp#contact">Contact Us</a></li>
     		
     			<!--<li class="dropdown">
           			

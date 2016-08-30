@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rideshare.model.Comments;
 import com.rideshare.services.DBService;
@@ -23,14 +24,14 @@ import com.rideshare.services.DBService;
 public class CommentsController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	final static Logger logger = Logger.getLogger(CommentsController.class);
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public CommentsController() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public CommentsController() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -51,14 +52,22 @@ public class CommentsController extends HttpServlet {
 			logger.debug("commentsController postid : "+postid);
 			DBService dbs = new DBService(request, response);
 			List<Comments> comments =(List)dbs.getCommentsByPostId(postid);
+			
 			logger.debug("commentsController Size : "+comments.size());
 			for(Comments c : comments){
 				logger.debug("commentsController : "+ c.toString());
 			}
 			rd = request.getRequestDispatcher("postActivityController");
-		}
-		rd.forward(request, response);
 		
+		ObjectMapper mapper = new ObjectMapper();
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+		logger.debug("commentsController JSON : "+mapper.writeValueAsString(comments));
+		response.getWriter().print(mapper.writeValueAsString(comments));
+		return;
+		}
+		//rd.forward(request, response);
+
 	}
 
 	/**
@@ -81,7 +90,7 @@ public class CommentsController extends HttpServlet {
 			rd = request.getRequestDispatcher("postActivityController");
 		}
 		rd.forward(request, response);
-		
+
 	}
 
 }

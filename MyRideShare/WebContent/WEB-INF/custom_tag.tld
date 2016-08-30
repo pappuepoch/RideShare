@@ -1,7 +1,7 @@
 <taglib>
-  <tlib-version>1.0</tlib-version>
-  <jsp-version>2.0</jsp-version>
-  <short-name>wap tags</short-name>
+	<tlib-version>1.0</tlib-version>
+	<jsp-version>2.0</jsp-version>
+	<short-name>wap tags</short-name>
 	<tag>
 		<description>Generates a Time Display</description>
 		<name>currentDateTime</name>
@@ -34,28 +34,12 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<name>value</name>
+			<name>cssClass</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-	</tag>
-	<tag>
-		<description>Generates a text input field</description>
-		<name>radioInput</name>
-		<tag-class>com.rideshare.tags.RadioInput</tag-class>
-		<body-content>empty</body-content>
 		<attribute>
-			<name>name</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>options</name>
-			<required>true</required>
-			<rtexprvalue>true</rtexprvalue>
-		</attribute>
-		<attribute>
-			<name>checked</name>
+			<name>value</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

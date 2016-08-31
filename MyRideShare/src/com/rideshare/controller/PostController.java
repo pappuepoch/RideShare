@@ -1,6 +1,9 @@
 package com.rideshare.controller;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,8 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.codehaus.jackson.map.ObjectMapper;
 
 import com.rideshare.dao.DAO_Service;
+import com.rideshare.model.Posts;
 import com.rideshare.services.DBService;
 
 /**
@@ -67,8 +72,16 @@ public class PostController extends HttpServlet {
 			boolean result = dbs.insertPost(posttype, post);
 			if(result){
 				logger.debug("PostController : post inserted");
-				//dbs.getPostList();
-				rd = request.getRequestDispatcher("user_home.jsp");
+				Map<String,Object> retMap = dbs.getPostList();
+				
+				response.setContentType("text/html");
+				response.setCharacterEncoding("UTF-8");
+				ObjectMapper mapper = new ObjectMapper();
+				logger.debug("likesController JSON : "+mapper.writeValueAsString(retMap));
+				response.getWriter().print(mapper.writeValueAsString(retMap));
+				return;
+				/*//dbs.getPostList();
+				rd = request.getRequestDispatcher("user_home.jsp");*/
 			}
 		}
 		rd.forward(request, response);

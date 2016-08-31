@@ -45,7 +45,7 @@ public class LoginController extends HttpServlet {
 		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
-			rd = request.getRequestDispatcher("user_home.jsp");
+			rd = request.getRequestDispatcher("views/wall.jsp");
 		}
 		rd.forward(request, response);
 		

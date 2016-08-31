@@ -141,6 +141,7 @@ public class DBService {
 				String md5pw;
 				try {
 					logger.debug("User: " + next.getEmail() + ", checked with # " + email);
+					
 					md5pw = pu.convertToMd5(password);
 					if (md5pw.equals(next.getPassword())) {
 						logger.debug("Login Successful");

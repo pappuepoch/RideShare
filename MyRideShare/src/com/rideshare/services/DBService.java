@@ -3,7 +3,9 @@ package com.rideshare.services;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,16 +40,16 @@ public class DBService {
 		this.pu = new ProjectUtils();
 	}
 
-	public boolean insertComments(int postid, String comment) {
+	public Comments insertComments(int postid, String comment) {
 		logger.debug("insertComments started");
 		Users users = (Users) this.session.getAttribute("users");
 		if (users != null) {
 			Comments comments = new Comments(users.getUserid(), postid, comment, new Date(), new Date());
 			DAO_Service daos = new DAO_Service();
 			daos.saveData(comments);
-			return true;
+			return comments;
 		}
-		return false;
+		return null;
 	}
 
 	public boolean insertPost(int posttype, String post) throws UnsupportedEncodingException {
@@ -59,28 +61,43 @@ public class DBService {
 		return daos.saveData(posts);
 	}
 
-	public List<Posts> getPostList() {
+	public Map<String,Object> getPostList() {
 		logger.debug("getPostList started");
 		// String query = "From Posts ORDER BY `posts`.`dateupdated` DESC";
 		DAO_Service daos = new DAO_Service();
-		List<Posts> resultList = daos.getOrderedPostList("DESC", "dateupdated");
+		List<Posts> posts = daos.getOrderedPostList("DESC", "dateupdated");
+		String query = "From Users ";
+		List<Users> users = daos.getResultList(query);
 		// List<Posts> resultList =
 		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
 
-		this.request.setAttribute("posts", resultList);
-		System.out.println("num of Posts:" + resultList.size());
-		/*
-		 * ObjectMapper mapper = new ObjectMapper(); try { logger.debug(
-		 * "JSON Test: "+mapper.writeValueAsString(resultList)); } catch
-		 * (IOException e) { // TODO Auto-generated catch block
-		 * //e.printStackTrace(); logger.debug("Cannot Convert To JSON : "+e); }
-		 * for (Posts next : resultList) { System.out.println("next Posts: " +
-		 * next); logger.debug("next Posts: " + next); try { logger.debug(
-		 * "JSON Test: "+mapper.writeValueAsString(next)); } catch (IOException
-		 * e) { // TODO Auto-generated catch block //e.printStackTrace();
-		 * logger.debug("Cannot Convert To JSON : "+e); } }
-		 */
-		return resultList;
+		this.request.setAttribute("posts", posts);
+		System.out.println("num of Posts:" + posts.size());
+		
+		Map<String,Object> retMap = new HashMap<>();
+		retMap.put("users", users);
+		retMap.put("posts", posts);
+
+		return retMap;
+	}
+	public Map<String,Object> getPostListByIndex(int firstResult, int maxResults, int posttype) {
+		logger.debug("getPostList started");
+		// String query = "From Posts ORDER BY `posts`.`dateupdated` DESC";
+		DAO_Service daos = new DAO_Service();
+		List<Posts> posts = daos.getOrderedPostListByRangeAndType("DESC", "dateupdated", firstResult, maxResults, posttype);
+		String query = "From Users ";
+		List<Users> users = daos.getResultList(query);
+		// List<Posts> resultList =
+		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
+
+		this.request.setAttribute("posts", posts);
+		System.out.println("num of Posts:" + posts.size());
+		
+		Map<String,Object> retMap = new HashMap<>();
+		retMap.put("users", users);
+		retMap.put("posts", posts);
+
+		return retMap;
 	}
 
 	public void insertUser(String fullname, String sGender, String state, String city, String street, String sZipcode,

@@ -22,14 +22,14 @@
             </div>
           </form>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Home</a></li>
+            <li><a href="LoginController">Home</a></li>
             <!--<li><a href="#" class="fa fa-user" alt="resquest"></a></li>
             <li><a href="#" class="fa fa-comments" alt="inbox"></a></li>-->
             <li><a href="#" class="fa fa-bell" alt="notifications"></a></li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Profile</a></li>
+                <li><a href="editProfile">Profile</a></li>
                 <li role="separator" class="divider"></li>
                 <li><a href="#">Logout</a></li>
                 <li role="separator" class="divider"></li>

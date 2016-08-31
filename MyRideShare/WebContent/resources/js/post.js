@@ -64,8 +64,9 @@ $(document).ready(function(){
        
             	var postid = $(this).attr("data-postid");
             	appendExistingComments(postid);
+            	appendCommentBox(postid)
             	//if (oneClick){
-            	//$("#comentContainer_"+postid).toggle(function () {appendCommentBox(postid)});
+            	//$("#displayCommentBox_"+postid).toggle(function () {appendCommentBox(postid)});
             	//}
             	//console.log(this);
             	//console.log(postid);
@@ -83,7 +84,7 @@ $(document).ready(function(){
             	//console.log(postid);
             	//var postId= $(".getId").attr("tabindex");
             	//alert(comments);
-            	return false;
+            	//return false;
             });
             
             /*$("#commentopenId").click(function(){
@@ -95,40 +96,11 @@ $(document).ready(function(){
            
     });
 function appendCommentBox(postid){
-//	var htmlcode='<textarea rows="4" cols="90%" class="media-heading title-post" name="comments_'+postid+'" id="comments_'+postid+'" ></textarea><br>'+
-//	'<input type="button" value="Comment" class="comment-post" data-comment-postid="'+postid+'" />';
-//	$("#comentContainer_"+postid).append(htmlcode);
-//	//$("#comentContainer_"+postid).append();
-	
-	//oneClick=false;
-	
-	/*var htmlcode="<div class='detailBox'>" +
-			" <div class='titleBox'> " +
-			"<label>Comment Box</label> "+
-			"<button type='button' class='close' aria-hidden='true'>&times;</button> " +
-			"</div> <div class='commentBox'>" +
-			" <a id='view'>view All comments </a>" +
-			"</div>" +
-			"<div class='actionBox'>" +
-			" <ul class='commentList'>" +
-			" <li>" +
-			"  <div class='commentText'>" +
-			" <p class=''>Hello this is a test comment.</p> <span class='date sub-text'>on March 5th, 2014</span>" +
-			"  </div>" +
-			"    </li>" +
-			"   </ul>" +
-			"   <form class='form-inline' role='form'>" +
-			"<div class='form-group'>" +
-			" <input class='form-control' type='text' placeholder=''Your comments' />" +
-			" </div>" +
-			" <div class='form-group'>" +
-			"  <button class='btn btn-default'>Add</button>" +
-			" </div>" +
-			" </form>" +
-			" </div>" +
-			"</div>";*/
-	
-	$("#comentContainer_"+postid).append(htmlcode);
+
+	var htmlcode='<input type="text" placeholder="Your comments" class="form-control title-post" name="comments_'+postid+'" id="comments_'+postid+'" /><br>'+
+	'<input type="button" value="Comment" class="comment-post btn btn-default" data-comment-postid="'+postid+'" />';
+	return htmlcode;
+	//$("#displayCommentBox_"+postid).append(htmlcode);
 
 }
 function appendExistingComments(postid){
@@ -137,12 +109,13 @@ function appendExistingComments(postid){
 	" <div class='titleBox'> " +
 	"<label>Comment Box</label> "+
 	"<button type='button' class='close' aria-hidden='true'>&times;</button> " +
-	"</div> <div class='commentBox'>" +
+	"</div> " +
+	"<div class='commentBox'>" +
 	" <a id='view'>view All comments </a>" +
 	"</div>" +
 	"<div class='actionBox'>" +
-	" <ul class='commentList'>" +
-	$("#comentContainer_"+postid).append(htmlcode);
+	" <ul class='commentList' >";
+	$("#displayCommentBox_"+postid).append(htmlcode);
 	
 	$.ajax({
         url:'commentsController',
@@ -151,24 +124,20 @@ function appendExistingComments(postid){
         dataType: 'json',
         success: function(data) { 
         	$.each( data, function( key, comment ) {
-        		var ui = " <li>" +
+        		var uifill = " <li class='commentList_"+postid+"'>" +
     			"  <div class='commentText'>" +
     			" <p class=''>"+comment.comment+"</p> <span class='date sub-text'>on "+moment(comment.dateupdated).format("DD-MM-YYYY HH:mm:ss")+"</span>" +
     			"  </div>" +
-    			"    </li>" +
-    			"   </ul>" ;
-        		
-        		$("#comentContainer_"+postid).append(ui);
-        		//$("#comentContainer_"+postid).prepend(comment.comment);
-        		//$("#comentContainer_"+postid).prepend(comment.dateupdated);
+    			"    </li>" ;
+        		$("#comentContainer_"+postid).append(uifill);
         	});
-        	console.log(data);
+        	//console.log(data);
         	//return data.likeCount;
         }
         
     });
 	
-	var endHtml= "</ul>" +"</div>" +"</div>";
+	var endHtml= "</ul>" +"</div>" +appendCommentBox(postid);//"<div id='displayCommentBox_"+postid+"' ></div>";
 	$("#comentContainer_"+postid).append(endHtml);
 	
 }
@@ -180,16 +149,27 @@ function postComments(postid,comments){
         type:'post',
         data:{postid:postid,comments:comments},
         dataType: 'json',
-        success: function(data) { 
+        success: function(data) {
+        	var uifill = " <li class='commentList_"+postid+"'>" +
+			"  <div class='commentText'>" +
+			" <p class=''>"+data.comment+"</p> <span class='date sub-text'>on "+moment(data.dateupdated).format("DD-MM-YYYY HH:mm:ss")+"</span>" +
+			"  </div>" +
+			"    </li>" ;
+        	//var uifill = " <li>" +data.comment +"</li>" ;
+    		
+    		$(".commentList_"+postid).append(uifill);
         	//this.count = data.likeCount;
         	//$("#comentContainer_"+postid).append(htmlcode);
         	
         	//console.log(data.likeCount);
-        	console.log(data);
+        	console.log(data.comment);
+        	console.log("#commentList_"+postid);
         	//return data.likeCount;
+        	$("#comments_"+postid).val("");
         }
         
     });
+	return false;
 	
 }
 

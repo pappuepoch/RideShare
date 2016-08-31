@@ -40,16 +40,16 @@ public class DBService {
 		this.pu = new ProjectUtils();
 	}
 
-	public boolean insertComments(int postid, String comment) {
+	public Comments insertComments(int postid, String comment) {
 		logger.debug("insertComments started");
 		Users users = (Users) this.session.getAttribute("users");
 		if (users != null) {
 			Comments comments = new Comments(users.getUserid(), postid, comment, new Date(), new Date());
 			DAO_Service daos = new DAO_Service();
 			daos.saveData(comments);
-			return true;
+			return comments;
 		}
-		return false;
+		return null;
 	}
 
 	public boolean insertPost(int posttype, String post) throws UnsupportedEncodingException {

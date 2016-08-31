@@ -88,8 +88,13 @@ public class CommentsController extends HttpServlet {
 			logger.debug("commentsController Comment : "+comments);
 			logger.debug("commentsController postid : "+postid);
 			DBService dbs = new DBService(request, response);
-			dbs.insertComments(postid, comments);
-			logger.debug("commentsController POST Comment : "+comments);
+			Comments comment= dbs.insertComments(postid, comments);
+			//logger.debug("commentsController POST Comment : "+comment);
+			ObjectMapper mapper = new ObjectMapper();
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			logger.debug("commentsController JSON : "+mapper.writeValueAsString(comment));
+			response.getWriter().print(mapper.writeValueAsString(comment));
 			return;
 			//rd = request.getRequestDispatcher("postActivityController");
 		}

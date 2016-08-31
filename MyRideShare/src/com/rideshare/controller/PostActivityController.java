@@ -97,9 +97,15 @@ public class PostActivityController extends HttpServlet {
 				dbs.delPost(postid);
 				request.setAttribute("xcmd", true);
 			}
-			rd = request.getRequestDispatcher("postActivityController");
+			//rd = request.getRequestDispatcher("postActivityController");
 		}
-		rd.forward(request, response);
+		//rd.forward(request, response);
+		response.setContentType("text/html");
+		response.setCharacterEncoding("UTF-8");
+		ObjectMapper mapper = new ObjectMapper();
+		logger.debug("likesController JSON : "+mapper.writeValueAsString(true));
+		response.getWriter().print(mapper.writeValueAsString(true));
+		return;
 	}
 
 }

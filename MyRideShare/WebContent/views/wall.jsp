@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ taglib prefix='ctg' uri='/WEB-INF/custom_tag.tld'%>
 <%@include file="/includes/base_config.jsp"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +13,7 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/font-awesome.min.css" rel="stylesheet">
 <link href="resources/css/style.css" rel="stylesheet">
+<link href="resources/css/wall.css" rel="stylesheet">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript" src="resources/js/post.js"></script>
 <script type="text/javascript" src="resources/js/moment.js"></script>
@@ -19,7 +21,7 @@
 </head>
 <body>
 	<jsp:include page="/views/fragments/wallControl.jsp"></jsp:include>
-	<input type="hidden" id="maxResults" value=5>
+	<input type="hidden" id="maxResults" value=2 >
 	<input type="hidden" id="firstResult" value=0>
 	<!--timeline-->
 	<section class="timeline col-sm-9">
@@ -33,6 +35,7 @@
 							data-src="resources/js/holder.js/50x50?theme=social"></a>
 					</div>
 					<div class="media-body">
+					<ctg:currentDateTime color="blue" size="15" />
 					<FORM action="" id="ridepost">
 						<textarea rows="4" cols="90%" class="media-heading title-post" name="post" id="post">
 						</textarea><br>
@@ -43,8 +46,8 @@
 				</div>
 			</div>
 			<!--#caption-->
-			<div class="links-post">
-				<span class="fa fa-thumbs-o-up link-post">
+			<div class="">
+				<span class="">
 					<input type="Submit" id="submit_post" value="Post" class="link-post"/>
 				</span>
 			</div>

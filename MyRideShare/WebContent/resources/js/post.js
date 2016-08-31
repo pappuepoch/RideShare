@@ -58,20 +58,11 @@ $(document).ready(function(){
             });// submit_post
             
 
-            $(document).on( "click", ".commentopenId", function() {
-            	//alert("Cone");
-            	//var oneClick=true;
-       
+            $(document).on( "click", ".commentopenId", function() { 
             	var postid = $(this).attr("data-postid");
-            	appendExistingComments(postid);
             	appendCommentBox(postid)
-            	//if (oneClick){
-            	//$("#displayCommentBox_"+postid).toggle(function () {appendCommentBox(postid)});
-            	//}
-            	//console.log(this);
-            	//console.log(postid);
-            	//var postId= $(".getId").attr("tabindex");
-            	//alert(postid);
+            	appendExistingComments(postid);
+            	
             	return false;
             });
             
@@ -79,43 +70,27 @@ $(document).ready(function(){
             	var postid = $(this).attr("data-comment-postid");
             	var comments = $("#comments_"+postid).val();
             	postComments(postid,comments);
-            	//appendCommentBox(postid);
-            	//console.log(comments);
-            	//console.log(postid);
-            	//var postId= $(".getId").attr("tabindex");
-            	//alert(comments);
-            	//return false;
             });
-            
-            /*$("#commentopenId").click(function(){
-            	alert("Cone");
-            	var htmlcode='<textarea rows="4" cols="90%" class="media-heading title-post" name="post" id="post">ggg</textarea>';	
-            	
-            	$("#comentContainer").append(htmlcode)
-            });*/
-           
+                   
     });
 function appendCommentBox(postid){
 
 	var htmlcode='<input type="text" placeholder="Your comments" class="form-control title-post" name="comments_'+postid+'" id="comments_'+postid+'" /><br>'+
 	'<input type="button" value="Comment" class="comment-post btn btn-default" data-comment-postid="'+postid+'" />';
 	return htmlcode;
-	//$("#displayCommentBox_"+postid).append(htmlcode);
 
 }
 function appendExistingComments(postid){
+	//
 	$("#comentContainer_"+postid).empty();
-	var htmlcode="<div class='detailBox'>" +
-	" <div class='titleBox'> " +
-	"<label>Comment Box</label> "+
+	var htmlcode="<div class='detailBox'>" +appendCommentBox(postid)+
+	"<div class='titleBox'> " +
 	"<button type='button' class='close' aria-hidden='true'>&times;</button> " +
 	"</div> " +
 	"<div class='commentBox'>" +
-	" <a id='view'>view All comments </a>" +
-	"</div>" +
 	"<div class='actionBox'>" +
-	" <ul class='commentList' >";
-	$("#displayCommentBox_"+postid).append(htmlcode);
+	" <ul class='commentList_"+postid+"'>"
+	$("#comentContainer_"+postid).append(htmlcode);
 	
 	$.ajax({
         url:'commentsController',
@@ -124,20 +99,19 @@ function appendExistingComments(postid){
         dataType: 'json',
         success: function(data) { 
         	$.each( data, function( key, comment ) {
-        		var uifill = " <li class='commentList_"+postid+"'>" +
+        		var uifill = " <li >" +
     			"  <div class='commentText'>" +
     			" <p class=''>"+comment.comment+"</p> <span class='date sub-text'>on "+moment(comment.dateupdated).format("DD-MM-YYYY HH:mm:ss")+"</span>" +
     			"  </div>" +
     			"    </li>" ;
-        		$("#comentContainer_"+postid).append(uifill);
+        		$(".commentList_"+postid).append(uifill);//here
         	});
-        	//console.log(data);
-        	//return data.likeCount;
+
         }
         
     });
 	
-	var endHtml= "</ul>" +"</div>" +appendCommentBox(postid);//"<div id='displayCommentBox_"+postid+"' ></div>";
+	var endHtml= "</ul>" +"</div>" ;
 	$("#comentContainer_"+postid).append(endHtml);
 	
 }
@@ -150,21 +124,14 @@ function postComments(postid,comments){
         data:{postid:postid,comments:comments},
         dataType: 'json',
         success: function(data) {
-        	var uifill = " <li class='commentList_"+postid+"'>" +
+        	var uifill = " <li >" +
 			"  <div class='commentText'>" +
 			" <p class=''>"+data.comment+"</p> <span class='date sub-text'>on "+moment(data.dateupdated).format("DD-MM-YYYY HH:mm:ss")+"</span>" +
 			"  </div>" +
-			"    </li>" ;
-        	//var uifill = " <li>" +data.comment +"</li>" ;
-    		
+			"    </li>" ;		
     		$(".commentList_"+postid).append(uifill);
-        	//this.count = data.likeCount;
-        	//$("#comentContainer_"+postid).append(htmlcode);
-        	
-        	//console.log(data.likeCount);
         	console.log(data.comment);
         	console.log("#commentList_"+postid);
-        	//return data.likeCount;
         	$("#comments_"+postid).val("");
         }
         

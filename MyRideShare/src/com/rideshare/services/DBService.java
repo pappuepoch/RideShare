@@ -80,6 +80,25 @@ public class DBService {
 
 		return retMap;
 	}
+	public Map<String,Object> getPostListByIndex(int firstResult, int maxResults) {
+		logger.debug("getPostList started");
+		// String query = "From Posts ORDER BY `posts`.`dateupdated` DESC";
+		DAO_Service daos = new DAO_Service();
+		List<Posts> posts = daos.getOrderedPostListByRange("DESC", "dateupdated", firstResult, maxResults);
+		String query = "From Users ";
+		List<Users> users = daos.getResultList(query);
+		// List<Posts> resultList =
+		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
+
+		this.request.setAttribute("posts", posts);
+		System.out.println("num of Posts:" + posts.size());
+		
+		Map<String,Object> retMap = new HashMap<>();
+		retMap.put("users", users);
+		retMap.put("posts", posts);
+
+		return retMap;
+	}
 
 	public void insertUser(String fullname, String sGender, String state, String city, String street, String sZipcode,
 			String sBirthyear, String email, String password) {

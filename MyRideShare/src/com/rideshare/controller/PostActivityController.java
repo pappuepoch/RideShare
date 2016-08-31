@@ -1,9 +1,11 @@
 package com.rideshare.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -46,9 +48,18 @@ public class PostActivityController extends HttpServlet {
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			logger.debug("postActivityController : post inserted");
+			String sMaxResults = (request.getParameter("maxResults")!=null)?(String)request.getParameter("maxResults"):"0";
+			String sFirstResult = (request.getParameter("firstResult")!=null)?(String)request.getParameter("firstResult"):"0";
+			int maxResults = Integer.parseInt(sMaxResults);
+			int firstResult = Integer.parseInt(sFirstResult);
 			DBService dbs = new DBService(request, response);
-			Map<String,Object> retMap = dbs.getPostList();
-			
+			Map<String,Object> retMap = new HashMap();
+			if(maxResults>0){
+				retMap = dbs.getPostListByIndex(firstResult, maxResults);
+				logger.debug("postActivityController maxResults : "+maxResults);
+			}else{
+				retMap = dbs.getPostList();
+			}
 			response.setContentType("text/html");
 			response.setCharacterEncoding("UTF-8");
 			ObjectMapper mapper = new ObjectMapper();

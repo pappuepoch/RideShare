@@ -7,7 +7,7 @@
     		
     		<ul class="nav navbar-nav">
     		
-    			<li><a href="#">Home</a></li>
+    			<li><a href="LoginController">Home</a></li>
                 <li><a href="/index.jsp#sevices">Service</a></li>
                 <li><a href="/index.jsp#contact">Contact Us</a></li>
     		

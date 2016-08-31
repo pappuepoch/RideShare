@@ -3,9 +3,13 @@
 $(document).ready(function(){ 
 	load25PostByType();
 	//loadAll();
+	$("input[name=posttype]:radio").change(function () {
+		$("#profile").empty();
+		load25PostByType();
+	});
             $('#submit_post').click(function(){
                 var post=$("#post").val();
-                alert($('input[name="posttype"]:checked', '#ridepost').val());
+                //alert($('input[name="posttype"]:checked', '#ridepost').val());
                 var posttype= $('input[name="posttype"]:checked', '#ridepost').val();
                 $.ajax({
                     url:'postController',
@@ -13,7 +17,7 @@ $(document).ready(function(){
                     data:{post:post,posttype:posttype},
                     dataType: 'json',
                     success: function(data) {
-                    	$(".profile").empty(); 
+                    	//$("#profile").empty(); 
                     	$("#post").val("");
                     	$.each( data, function( key, value ) {
                     		if(key=="posts"){
@@ -32,7 +36,7 @@ $(document).ready(function(){
                     							'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
                     							'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
                     							'</div></div>'+			
-                    							'<p>'+item.post+'</p></div>'+
+                    							'<p>'+item.post+'</p><p>'+item.posttype+'</div>'+
                     							'<div class="links-post">'+
                     							'<span class="fa fa-thumbs-o-up link-post active"></span><a href="#"	class="link-post active" role="button">Like</a> <span class="fa fa-comment link-post"></span><a href="#" class="link-post" role="button">Comment</a> <span	class="fa fa-reply link-post"></span><a href="#" class="link-post" role="button">Share</a></div></div></div>'
                     					);
@@ -52,10 +56,19 @@ $(document).ready(function(){
            
     });
 function load25PostByType(){
+	var firstResult = $("#firstResult").val();
+	var maxResults = $("#maxResults").val();
+	firstResult = (firstResult==0)?0:firstResult;
+	maxResults = (maxResults==0)?25:maxResults;
+	var newval=(Number(firstResult)+Number(maxResults));
+    console.log(firstResult+" : "+maxResults+", new firstResult "+ Number(newval));
+    var posttype= $('input[name="posttype"]:checked', '#ridepost').val();
+//    $("input[id=firstResult]").val(Number(newval))
+    
 	$.ajax({
         url:'postActivityController',
         type:'get',
-        data:{maxResults:25,firstResult:0},
+        data:{maxResults:maxResults,firstResult:firstResult,posttype:posttype},
         dataType: 'json',
         success: function(data) { 
         	$("#post").val("");
@@ -75,7 +88,7 @@ function load25PostByType(){
             									'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
             						'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
             						'</div></div>'+			
-									'<p>'+item.post+'</p></div>'+
+									'<p>'+item.post+'</p><p>'+item.posttype+'</div>'+
 									'<div class="links-post">'+
 									'<span class="fa fa-thumbs-o-up link-post active"></span><a href="#"	class="link-post active" role="button">Like</a> <span class="fa fa-comment link-post"></span><a href="#" class="link-post" role="button">Comment</a> <span	class="fa fa-reply link-post"></span><a href="#" class="link-post" role="button">Share</a></div></div></div>'
 								);
@@ -83,6 +96,7 @@ function load25PostByType(){
             			})
             		}
             	});
+            
         }
         
     });
@@ -111,7 +125,7 @@ function loadAll(){
             									'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
             						'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
             						'</div></div>'+			
-									'<p>'+item.post+'</p></div>'+
+            						'<p>'+item.post+'</p><p>'+item.posttype+'</div>'+
 									'<div class="links-post">'+
 									'<span class="fa fa-thumbs-o-up link-post active"></span><a href="#"	class="link-post active" role="button">Like</a> <span class="fa fa-comment link-post"></span><a href="#" class="link-post" role="button">Comment</a> <span	class="fa fa-reply link-post"></span><a href="#" class="link-post" role="button">Share</a></div></div></div>'
 								);

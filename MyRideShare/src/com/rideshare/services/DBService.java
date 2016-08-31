@@ -80,11 +80,11 @@ public class DBService {
 
 		return retMap;
 	}
-	public Map<String,Object> getPostListByIndex(int firstResult, int maxResults) {
+	public Map<String,Object> getPostListByIndex(int firstResult, int maxResults, int posttype) {
 		logger.debug("getPostList started");
 		// String query = "From Posts ORDER BY `posts`.`dateupdated` DESC";
 		DAO_Service daos = new DAO_Service();
-		List<Posts> posts = daos.getOrderedPostListByRange("DESC", "dateupdated", firstResult, maxResults);
+		List<Posts> posts = daos.getOrderedPostListByRangeAndType("DESC", "dateupdated", firstResult, maxResults, posttype);
 		String query = "From Users ";
 		List<Users> users = daos.getResultList(query);
 		// List<Posts> resultList =

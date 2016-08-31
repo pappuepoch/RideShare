@@ -100,7 +100,7 @@ public class DAO_Service {
 		Criteria criteria = session.createCriteria(Posts.class);
 		criteria.setFirstResult(firstResult);
 		criteria.setMaxResults(maxResults);
-		if("DESC".toLowerCase().equals(order)){
+		if("DESC".toLowerCase().equals(order.toLowerCase())){
 			criteria.addOrder(Order.desc(column));
 		}else{
 			criteria.addOrder(Order.asc(column));
@@ -175,6 +175,22 @@ public class DAO_Service {
 		}
 		return false;
 		
+	}
+	public List<Posts> getOrderedPostListByRangeAndType(String order, String column, int firstResult, int maxResults,
+			int posttype) {
+		logger.debug("getOrderedPostList Started");
+		Criteria criteria = session.createCriteria(Posts.class).add(Restrictions.eq("posttype",posttype));
+		criteria.setFirstResult(firstResult);
+		criteria.setMaxResults(maxResults);
+		if("DESC".toLowerCase().equals(order.toLowerCase())){
+			criteria.addOrder(Order.desc(column));
+		}else{
+			criteria.addOrder(Order.asc(column));
+		}
+		
+		List<Posts> posts = criteria.list() ; 
+		logger.debug("getOrderedPostList posts count "+posts.size());
+		return posts;
 	}
 	
 }

@@ -48,14 +48,16 @@ public class PostActivityController extends HttpServlet {
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
 			logger.debug("postActivityController : post inserted");
+			String sPosttype = (request.getParameter("posttype")!=null)?(String)request.getParameter("posttype"):"0";
 			String sMaxResults = (request.getParameter("maxResults")!=null)?(String)request.getParameter("maxResults"):"0";
 			String sFirstResult = (request.getParameter("firstResult")!=null)?(String)request.getParameter("firstResult"):"0";
+			int posttype = Integer.parseInt(sPosttype);
 			int maxResults = Integer.parseInt(sMaxResults);
 			int firstResult = Integer.parseInt(sFirstResult);
 			DBService dbs = new DBService(request, response);
 			Map<String,Object> retMap = new HashMap();
 			if(maxResults>0){
-				retMap = dbs.getPostListByIndex(firstResult, maxResults);
+				retMap = dbs.getPostListByIndex(firstResult, maxResults,posttype);
 				logger.debug("postActivityController maxResults : "+maxResults);
 			}else{
 				retMap = dbs.getPostList();

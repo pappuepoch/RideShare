@@ -63,8 +63,9 @@ public class LoginController extends HttpServlet {
 		RequestDispatcher rd;
 		logger.debug("LoginController");
 		if(dbs.checkLogin(username, password)){
-			rd = request.getRequestDispatcher("user_home.jsp");
-			logger.debug("LoginController: user_home");
+			/*rd = request.getRequestDispatcher("user_home.jsp");
+			logger.debug("LoginController: user_home");*/
+			rd = request.getRequestDispatcher("views/wall.jsp");
 		}else{
 			rd = request.getRequestDispatcher("index.jsp");
 			logger.debug("LoginController: index");

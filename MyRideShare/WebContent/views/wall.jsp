@@ -19,7 +19,7 @@
 </head>
 <body>
 	<jsp:include page="/views/fragments/wallControl.jsp"></jsp:include>
-	<input type="hidden" id="maxResults" value=25>
+	<input type="hidden" id="maxResults" value=5>
 	<input type="hidden" id="firstResult" value=0>
 	<!--timeline-->
 	<section class="timeline col-sm-9">

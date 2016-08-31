@@ -1,6 +1,7 @@
 "use strict";
 
-$(document).ready(function(){ 
+$(document).ready(function(){
+	var count=20;
 	load25PostByType();
 	//loadAll();
 	$("input[name=posttype]:radio").change(function () {
@@ -78,7 +79,8 @@ function load25PostByType(){
             				//console.log(item);
             				var user = objectFindByKey(data.users,"userid", item.userid);
             				//console.log(user);
-            				
+            				var likeCount = getLikeCount(item.postid);
+            				console.log(likeCount);
             				$("#profile").append('<div class="thumbnail thumbnail-post">'+            						
             						'<div class="caption">'+
             							'<div class="media">'+
@@ -100,6 +102,22 @@ function load25PostByType(){
         }
         
     });
+}
+function getLikeCount(postid){
+	$.ajax({
+        url:'likesController',
+        type:'get',
+        datda:{postid:postid},
+        dataType: 'json',
+        success: function(data) { 
+        	this.count = data.likeCount;
+        	//console.log(data.likeCount);
+        	console.log(this.count);
+        	//return data.likeCount;
+        }
+        
+    });
+	//return this.count;
 }
 
 function loadAll(){
@@ -137,6 +155,7 @@ function loadAll(){
         
     });
 }
+
 function objectFindByKey(jsonObj, searchField, searchVal) {
     var results = [];
     for (var i=0 ; i < jsonObj.length ; i++)

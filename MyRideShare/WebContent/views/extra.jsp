@@ -40,9 +40,9 @@
 						<textarea rows="4" cols="90%" class="media-heading title-post" name="post" id="post">
 						</textarea><br>
 						<input type="radio" name="posttype" value="1" checked/> Post a Ride
-				  		<input type="radio" name="posttype" value="2"/> Get a Ride  
-				  		<label id="getLocation"	></label>	
-				  		
+				  		<input type="radio" name="posttype" value="2"/> Get a Ride  <br>
+				  		<input type="button" name="btn" value="Get Location" Id="getLocation"  class="link-post"/>
+				  		<input type="Submit" id="submit_post" value="Post" class="link-post"/>
 				  	</form>
 				  	
 				  	
@@ -50,11 +50,11 @@
 				</div>
 			</div>
 			<!--#caption-->
-			<div class="">
+	<!-- 		<div class="">
 				<span class="">
 					<input type="Submit" id="submit_post" value="Post" class="link-post"/>
 				</span>
-			</div>
+			</div> -->
 	
 		</div>
 		<!--#post timeline-->
@@ -76,3 +76,4 @@
 	<script src="resources/js/holder.js"></script>
 </body>
 </html>
+

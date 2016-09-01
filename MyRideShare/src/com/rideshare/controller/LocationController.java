@@ -38,14 +38,15 @@ public class LocationController extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
-		DBService dbs = new DBService(request, response);
+		/*DBService dbs = new DBService(request, response);
 		List<Users> users = dbs.getUserList();
 		ObjectMapper mapper = new ObjectMapper();
 		response.setContentType("text/html");
 		response.setCharacterEncoding("UTF-8");
 		logger.debug("LocationController JSON : "+mapper.writeValueAsString(users));
 		response.getWriter().print(mapper.writeValueAsString(users));
-		return;
+		return;*/
+		
 	}
 
 	/**

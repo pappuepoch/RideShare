@@ -1,11 +1,14 @@
 package com.rideshare.controller;
 
 import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -47,9 +50,27 @@ public class PostController extends HttpServlet {
 		loginStatus = (session.getAttribute("loginStatus")!=null)?(boolean)session.getAttribute("loginStatus"):false;
 		RequestDispatcher rd = request.getRequestDispatcher("index.jsp");
 		if(loginStatus){
-			rd = request.getRequestDispatcher("post.jsp");
+			String sSessPostId = (session.getAttribute("sessPostId")==null)?"0":(String)session.getAttribute("sessPostId");
+			int sessPostId = Integer.parseInt(sSessPostId);
+			ServletContext context = request.getSession().getServletContext();
+			String sContPostId = (session.getAttribute("globPostId")==null)?"0":(String)session.getAttribute("globPostId");
+			int contPostId=Integer.parseInt(sContPostId);
+			logger.debug("postController sessPostId : "+sessPostId);
+			logger.debug("postController contPostId : "+contPostId);
+			int retVal =0;
+			if(contPostId>sessPostId){
+				retVal =1;
+			}
+			logger.debug("postController retVal : "+retVal);
+			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
+			ObjectMapper mapper = new ObjectMapper();
+			logger.debug("likesController JSON : "+mapper.writeValueAsString(retVal));
+			response.getWriter().print(mapper.writeValueAsString(retVal));
+			return;
+			
 		}
-		rd.forward(request, response);
+		//rd.forward(request, response);
 	}
 
 	/**

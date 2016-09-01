@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -70,7 +71,8 @@ public class DBService {
 		List<Users> users = daos.getResultList(query);
 		// List<Posts> resultList =
 		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
-
+		ServletContext context = request.getSession().getServletContext();
+		context.setAttribute("globPostId", posts.get(0).getPostid());
 		this.request.setAttribute("posts", posts);
 		System.out.println("num of Posts:" + posts.size());
 		
@@ -89,7 +91,9 @@ public class DBService {
 		List<Users> users = daos.getResultList(query);
 		// List<Posts> resultList =
 		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
-
+		//ServletContext context = request.getSession().getServletContext();
+		//context.setAttribute("lastPostId", posts.get(0).getPostid());
+		this.request.getSession().setAttribute("sessPostId", posts.get(0).getPostid());
 		this.request.setAttribute("posts", posts);
 		System.out.println("num of Posts:" + posts.size());
 		
@@ -201,7 +205,7 @@ public class DBService {
 		// TODO Auto-generated method stub
 		logger.debug("getCommentsByPostId started");
 		DAO_Service daos = new DAO_Service();
-		List<Comments> resultList = daos.getCommentsListByPostId(postid, "DESC", "dateupdated");
+		List<Comments> resultList = daos.getCommentsListByPostId(postid, "ASC", "dateupdated");
 		// List<Posts> resultList =
 		// daos.getOrderedPostListByRange("DESC","dateupdated",0,5);
 		this.request.setAttribute("comments", resultList);

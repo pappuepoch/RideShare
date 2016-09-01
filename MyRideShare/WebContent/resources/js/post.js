@@ -1,7 +1,18 @@
 "use strict";
 
 $(document).ready(function(){
-	var count=20;
+	var intCounter=0;
+	var tid = setInterval(mycode, 5000);
+	function mycode() {
+		var posttype= $('input[name="posttype"]:checked', '#ridepost').val();
+	  console.log("Printing after: "+intCounter++);
+	  console.log("posttype: "+posttype);
+	  //checkNewPosts();
+	}
+	function abortTimer() { // to be called when you want to stop the timer
+	  clearInterval(tid);
+	}
+
 	load25PostByType();
 	//loadAll();
 	$("input[name=posttype]:radio").change(function () {
@@ -28,8 +39,31 @@ $(document).ready(function(){
                     					//console.log(item);
                     					var user = objectFindByKey(data.users,"userid", item.userid);
                     					//console.log(user);
-
-                    					$("#profile").prepend('<div class="thumbnail thumbnail-post">'+            						
+                    					
+                    					$("#profile").prepend('<div class="thumbnail thumbnail-post getId" data-postid="'+item.postid+'" id="post_'+item.postid+'" >'+             						
+                        						'<div class="caption">'+
+                        							'<div class="media">'+
+                        								'<div class="media-left">'+
+                        									'<a href="#" class="image-post"> <img data-src="resources/js/holder.js/50x50?theme=social"></a></div>'+
+                        								'<div class="media-body">'+
+                        									'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
+                        						'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
+                        						'</div></div>'+			
+                        						'<p>'+item.post+'</p><p></div>'+
+            									'<div class="links-post">'+
+            									'<span class="fa fa-thumbs-o-up link-post active"></span>'+
+            									'<a href="#" class="link-post active" role="button" data-like-postid="'+item.postid+'">Like</a>'+
+            									'<span id="likeCount'+item.postid+'" >Count</span><span class="fa fa-comment link-post"></span>'+
+            									'<a href="#" role="button" class="commentopenId" data-postid="'+item.postid+'">Comment</a>'+
+            									'<span id="commentsCount'+item.postid+'" >Com Count</span>'+
+            									'<span class="fa fa-reply link-post"></span>'+
+            									'<a href="#" class="delete-post" role="button" data-del-postid="'+item.postid+'">Delete</a></div>'+
+            									'<div id ="comentContainer_'+item.postid+'" >'+
+            									'</div>'+
+            									'</div></div>'
+            								);
+                    					
+                    					/*$("#profile").prepend('<div class="thumbnail thumbnail-post">'+            						
                     							'<div class="caption">'+
                     							'<div class="media">'+
                     							'<div class="media-left">'+
@@ -38,13 +72,21 @@ $(document).ready(function(){
                     							'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
                     							'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
                     							'</div></div>'+			
-                    							'<p>'+item.post+'</p><p>'+'</div>'+
-                    							'<div class="links-post">'+
-                    							'<span class="fa fa-thumbs-o-up link-post active"></span><a href="#"	class="link-post active" role="button">Like</a> <span class="fa fa-comment link-post"></span>'+
-                    							'<a href="#" class="link-post" role="button">Comment</a> <span	class="fa fa-reply link-post"></span>'+
-                    							'<a href="#" class="link-post" role="button">Delete</a></div></div></div>'
-                    					);
-
+                    							'<p>'+item.post+'</p><p></div>'+
+            									'<div class="links-post">'+
+            									'<span class="fa fa-thumbs-o-up link-post active"></span>'+
+            									'<a href="#" class="link-post active" role="button" data-like-postid="'+item.postid+'">Like</a>'+
+            									'<span id="likeCount'+item.postid+'" >Count</span><span class="fa fa-comment link-post"></span>'+
+            									'<a href="#" role="button" class="commentopenId" data-postid="'+item.postid+'">Comment</a>'+
+            									'<span id="commentsCount'+item.postid+'" >Com Count</span>'+
+            									'<span class="fa fa-reply link-post"></span>'+
+            									'<a href="#" class="delete-post" role="button" data-del-postid="'+item.postid+'">Delete</a></div>'+
+            									'<div id ="comentContainer_'+item.postid+'" >'+
+            									'</div>'+
+            									'</div></div>'
+                    					);*/
+                    					var likeCount = getLikeCount(item.postid);
+                        				getCommentsCount(item.postid);
                     				}
                     			}
                     			)
@@ -57,6 +99,11 @@ $(document).ready(function(){
                 return false;
             });// submit_post
             
+            $(document).on( "click", ".link-post", function() {
+            	var postid = $(this).attr("data-like-postid");
+            	putLike(postid);
+            	return false;
+            });
 
             $(document).on( "click", ".commentopenId", function() { 
             	var postid = $(this).attr("data-postid");
@@ -71,8 +118,78 @@ $(document).ready(function(){
             	var comments = $("#comments_"+postid).val();
             	postComments(postid,comments);
             });
+            
+            $(document).on( "click", ".delete-post", function() {
+            	var postid = $(this).attr("data-del-postid");
+            	deletePost(postid)
+            	return false;
+            });
                    
     });
+
+function checkNewPosts(){
+	$.ajax({
+        url:'postController',
+        type:'get',
+        dataType: 'json',
+        success: function(data) { 
+        	this.count = data.likeCount;
+        	$("#likeCount"+postid).text(" "+data.likeCount);
+        	//console.log(data.likeCount);
+        	console.log(this.count);
+        	//return data.likeCount;
+        }
+        
+    });
+	//return this.count;
+}
+
+function deletePost(postid){
+	//alert("Come");
+	$.ajax({
+        url:'postActivityController',
+        type:'post',
+        data:{postid:postid,cmd:"del"},
+        dataType: 'json',
+        success: function(data) { 
+        	$("#post_"+postid).remove();
+        	//getLikeCount(postid);
+        }
+        
+    });
+	//return this.count;
+}
+
+
+function getCommentsCount(postid){
+	$.ajax({
+        url:'commentsController',
+        type:'get',
+        data:{postid:postid},
+        dataType: 'json',
+        success: function(data) { 
+        	$("#commentsCount"+postid).text(" "+data.length);
+        }
+        
+    });
+}
+
+
+function putLike(postid){
+	$.ajax({
+        url:'likesController',
+        type:'post',
+        data:{postid:postid,cmd:"add"},
+        dataType: 'json',
+        success: function(data) { 
+        	console.log(data);
+        	getLikeCount(postid);
+        }
+        
+    });
+	//return this.count;
+}
+
 function appendCommentBox(postid){
 
 	var htmlcode='<input type="text" placeholder="Your comments" class="form-control title-post" name="comments_'+postid+'" id="comments_'+postid+'" /><br>'+
@@ -84,9 +201,6 @@ function appendExistingComments(postid){
 	//
 	$("#comentContainer_"+postid).empty();
 	var htmlcode="<div class='detailBox'>" +appendCommentBox(postid)+
-	"<div class='titleBox'> " +
-	"<button type='button' class='close' aria-hidden='true'>&times;</button> " +
-	"</div> " +
 	"<div class='commentBox'>" +
 	"<div class='actionBox'>" +
 	" <ul class='commentList_"+postid+"'>"
@@ -133,6 +247,7 @@ function postComments(postid,comments){
         	console.log(data.comment);
         	console.log("#commentList_"+postid);
         	$("#comments_"+postid).val("");
+        	getCommentsCount(postid);
         }
         
     });
@@ -165,7 +280,7 @@ function load25PostByType(){
             				//console.log(user);
             				//var likeCount = getLikeCount(item.postid);
             				//console.log(likeCount);
-            				$("#profile").append('<div class="thumbnail thumbnail-post getId" data-postid="'+item.postid+'" >'+            						
+            				$("#profile").append('<div class="thumbnail thumbnail-post getId" data-postid="'+item.postid+'" id="post_'+item.postid+'" >'+             						
             						'<div class="caption">'+
             							'<div class="media">'+
             								'<div class="media-left">'+
@@ -174,18 +289,22 @@ function load25PostByType(){
             									'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
             						'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
             						'</div></div>'+			
-									'<p>'+item.post+'</p><p></div>'+
+            						'<p>'+item.post+'</p><p></div>'+
 									'<div class="links-post">'+
-									'<span class="fa fa-thumbs-o-up link-post active"></span><a href="#"	class="link-post active" role="button">Like</a> <span id="likeCount'+item.postid+'" >Count</span><span class="fa fa-comment link-post"></span>'+
-									'<a href="javasctipt:" role="button" class="commentopenId" data-postid="'+item.postid+'">Comment</a> <span class="fa fa-reply link-post"></span>'+
-									'<a href="#" class="link-post" role="button">Delete</a></div>'+
+									'<span class="fa fa-thumbs-o-up link-post active"></span>'+
+									'<a href="#" class="link-post active" role="button" data-like-postid="'+item.postid+'">Like</a>'+
+									'<span id="likeCount'+item.postid+'" >Count</span><span class="fa fa-comment link-post"></span>'+
+									'<a href="#" role="button" class="commentopenId" data-postid="'+item.postid+'">Comment</a>'+
+									'<span id="commentsCount'+item.postid+'" >Com Count</span>'+
+									'<span class="fa fa-reply link-post"></span>'+
+									'<a href="#" class="delete-post" role="button" data-del-postid="'+item.postid+'">Delete</a></div>'+
 									'<div id ="comentContainer_'+item.postid+'" >'+
-									
 									'</div>'+
 									'</div></div>'
 								);
 
             				var likeCount = getLikeCount(item.postid);
+            				getCommentsCount(item.postid);
             			})
             		}
             	});
@@ -195,13 +314,11 @@ function load25PostByType(){
     });
 }
 
-
-
 function getLikeCount(postid){
 	$.ajax({
         url:'likesController',
         type:'get',
-        datda:{postid:postid},
+        data:{postid:postid},
         dataType: 'json',
         success: function(data) { 
         	this.count = data.likeCount;

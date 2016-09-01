@@ -2,62 +2,30 @@
 
 var GoogleMapService = (function () {
     //const google = "";  //Resharper issue workaround, Disable before run
-    const googleMapKey = "AIzaSyDYyVfBbxBp2RfkKi0RQysjKWAKSNtyQa8";
-    const openWeatherMapKey = "6697e09d50a13bfd873bc8db13cbb75c";
-    const mapDiv = "map";
-    let defaultLocation;
+    let googleMapKey = "";
+    let openWeatherMapKey = "";
+    let mapDiv = "";
+    let defaultLocation = "";
 
 
-    function initGoogleMapService() {
-        defaultLocation = new google.maps.LatLng(30.064742, 31.249509);       //Set the DefaultLocation Cairo Location
+    function initGoogleMapService(googleMapKeyParam, openWeatherMapKeyParam, mapDivParam, defaultLatitude, defaultLongitude) {
+        googleMapKey = googleMapKeyParam;
+        openWeatherMapKey = openWeatherMapKeyParam;
+        mapDiv = mapDivParam;
+        defaultLocation = new google.maps.LatLng(defaultLatitude, defaultLongitude);
 
-        const userCity = $("#userCity").val();
-        if (userCity == undefined)
-            showCurrentLocationWeather();
-        else
-            showWeatherByAddress(userCity);
-         
-
-        $("#btn_locate")
-            .click(function () {
-                const address = $("#txt_address").val();
-                showWeatherByAddress(address);
-            });
-
-        $("#btn_findRoute")
-            .click(function () {
-                const originAddress = $("#txt_originAddress").val();
-                const destinationAddress = $("#txt_destinationAddress").val();
-                finRoute(originAddress, destinationAddress);
-            });
+        initGoogleMapWithLocation(defaultLocation);
     }
 
-    function initGoogleMapService_Test() {
-        defaultLocation = new google.maps.LatLng(30.064742, 31.249509);       //Set the DefaultLocation Cairo Location
+    function initGoogleMapPlaceAutoComplete(originInputControl, destinationInputControl) {
+        const googleMap = initGoogleMapWithLocation(defaultLocation);
 
-        showLocationOnGoogleMap(defaultLocation, "Location Found", true);
-        showCurrentLocation();
+        const originAutoComplete = new google.maps.places.Autocomplete(originInputControl);
+        originAutoComplete.bindTo('bounds', googleMap);
 
-        $("#btn_locate")
-            .click(function () {
-                const address = $("#txt_address").val();
-                showLocationByAddressOnGoogleMap(address, "Address Found", false);
-                showWeatherByAddress(address);
-                //showWeatherForecastByAddress(address);
-            });
-
-        $("#btn_findRoute")
-            .click(function () {
-                const originAddress = $("#txt_originAddress").val();
-                const destinationAddress = $("#txt_destinationAddress").val();
-
-                //Show multiple routs
-                const googleMap = initGoogleMapWithLocation(defaultLocation);
-                finRoute(originAddress, destinationAddress, googleMap);
-                finRoute("Hurghada", "Aswan", googleMap);
-            });
+        const destinationAutoComplete = new google.maps.places.Autocomplete(destinationInputControl);
+        destinationAutoComplete.bindTo('bounds', googleMap);
     }
-
 
     function initGoogleMapWithLocation(location) {
         return new google.maps.Map(document.getElementById(mapDiv),
@@ -143,7 +111,7 @@ var GoogleMapService = (function () {
     function showCurrentLocationWeather() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(function (position) {
-                    showWeatherByLocation(position.coords.latitude, position.coords.longitude);
+                showWeatherByLocation(position.coords.latitude, position.coords.longitude);
             },
                 function () {
                     showLocationOnGoogleMap(defaultLocation, "Error: The Geolocation service failed!", true, google.maps.Animation.DROP);
@@ -170,7 +138,15 @@ var GoogleMapService = (function () {
         }
     }
 
-    function finRoute(originAddress, destinationAddress, googleMap) {
+
+    function findRouteByLocation(originAddressLatitude, originAddressLongitude, destinationAddressLatitude, destinationAddressLongitude, googleMap) {
+        const originAddress = new google.maps.LatLng(originAddressLatitude, originAddressLongitude);
+        const destinationAddress = new google.maps.LatLng(destinationAddressLatitude, destinationAddressLongitude);
+
+        findRouteByAddress(originAddress, destinationAddress, googleMap);
+    }   
+
+    function findRouteByAddress(originAddress, destinationAddress, googleMap, callbackFunction) {
         if (googleMap == undefined)                                   //Do not initGoogleMapWithLocation so you can support find multiple routs
             googleMap = initGoogleMapWithLocation(originAddress);     //passing wrong address is okay as it will be overriden below by "directionsDisplay"
 
@@ -182,15 +158,23 @@ var GoogleMapService = (function () {
             origin: originAddress, destination: destinationAddress,
             travelMode: "DRIVING",                                                 //DRIVING, BICYCLING, TRANSIT, WALKING
             unitSystem: google.maps.UnitSystem.METRIC
-        }, function (response, status) {        //UnitSystem.IMPERIAL(kilometers), UnitSystem.METRIC(miles)
+        }, function (result, status) {        //UnitSystem.IMPERIAL(kilometers), UnitSystem.METRIC(miles)
             if (status === "OK") {
-                directionsDisplay.setDirections(response);
+                directionsDisplay.setDirections(result);
+
+                if (callbackFunction != undefined)
+                    callbackFunction({
+                        OriginAddressLatitude: result.routes[0].legs[0].start_location.lat(),
+                        OriginAddressLongitude: result.routes[0].legs[0].start_location.lng(),
+                        DestinationAddressLatitude: result.routes[0].legs[0].end_location.lat(),
+                        DestinationAddressLongitude: result.routes[0].legs[0].end_location.lng()
+                    });
             }
             else if ((status === "NOT_FOUND") || (status === "ZERO_RESULTS")) {
                 alert("Route Not Found!");
             }
             else {
-                window.alert("Directions request failed due to: " + status);
+                alert("Directions request failed due to: " + status);
             }
         });
     }
@@ -243,8 +227,6 @@ var GoogleMapService = (function () {
 
     function getWeatherForecast(weather_API_URL) {
         $.getJSON(weather_API_URL, function (data) {
-            console.log(data);
-
             if (data.cod === "404") {
                 alert("Location Not Found!");
                 return;
@@ -279,11 +261,15 @@ var GoogleMapService = (function () {
         showLocationOnGoogleMap: showLocationOnGoogleMap,
         showLocationByAddressOnGoogleMap: showLocationByAddressOnGoogleMap,
         showCurrentLocation: showCurrentLocation,
-        finRoute: finRoute,
+        showCurrentLocationWeather: showCurrentLocationWeather,
+        showCurrentLocationWeatherForecast: showCurrentLocationWeatherForecast,
+        findRouteByAddress: findRouteByAddress,
+        findRouteByLocation: findRouteByLocation,
         showWeatherByAddress: showWeatherByAddress,
         showWeatherByLocation: showWeatherByLocation,
         showWeatherForecastByAddress: showWeatherForecastByAddress,
         showWeatherForecastByLocation: showWeatherForecastByLocation,
+        initGoogleMapPlaceAutoComplete: initGoogleMapPlaceAutoComplete,
         googleMapKey: googleMapKey
     }
 

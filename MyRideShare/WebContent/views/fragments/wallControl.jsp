@@ -49,8 +49,10 @@
               <div class="caption caption-grand-profile">
               </div>
               <ul class="nav nav-pills nav-grand-profile">
-                  <li role="presentation" class="active"><a href="#">About Us</a></li>
-                  <li role="presentation"><a href="#">Weather</a></li>
+                  <li role="presentation" class="active"><a href="views/wall.jsp">Home</a></li>
+                  <li role="presentation"><a href="views/location.jsp">Weather</a></li>
+                  <li role="presentation"><a href="views/locationpost.jsp">Post</a></li>
+  
              
               </ul>
             </div>    
@@ -58,9 +60,9 @@
         
         <aside class="col-sm-3">
             <div class="panel panel-default">
-                <div class="panel-heading">About</div>
+                <div class="panel-heading">Control Panel</div>
                 <div class="panel-body">
-                Panel content
+                
                 </div>
             </div>
         </aside>

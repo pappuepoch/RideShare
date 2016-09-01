@@ -54,11 +54,11 @@ $(function() {
 
 					});
 
-	$("#form")
+	$("#formId")
 			.submit(
 					function() {
 
-						$("#form")
+						$("#formId")
 								.find(':input')
 								.each(
 										function() {
@@ -66,9 +66,9 @@ $(function() {
 											var x = $(this).val();
 											console.log(x); 
 											if (x == null || x== "") {
-								               // alert( emp)
+								               // alert( 1)
 								                 $("#lblError").append('<span style="color:red">All Fields are Required</span>');
-								               // return false;
+								               return false;
 								            }
 								            else
 								            {

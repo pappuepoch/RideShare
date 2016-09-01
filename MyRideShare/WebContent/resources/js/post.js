@@ -12,8 +12,35 @@ $(document).ready(function(){
 	function abortTimer() { // to be called when you want to stop the timer
 	  clearInterval(tid);
 	}
+	
 
 	load25PostByType();
+
+
+	var win = $(window);
+
+	$(window).on('scroll', function()
+	{
+		   //console.log("Counter  from scroll   "+$("#postcounter").attr("data-counter"))
+           //console.log("win "+win.height())
+           //console.log("top "+win.scrollTop());
+           //console.log("doc  "+$(document).height());
+	       //+'<input type="hidden"  data-counter=''/>'
+		
+		
+		if ($(document).height()-win.scrollTop()<= 1000) {
+    		//var firstResult = $("#firstResult").val();
+			//var maxResults = $("#maxResults").val();
+			//console.log("first "+firstResult)
+			//console.log("max "+maxResults)
+			//console.log("Counter  from scroll   "+$("#postcounter").attr("data-counter"))//testing
+			loadinfinitePostByType();
+	
+		}
+	});
+	
+	
+	
 	//loadAll();
 	$("input[name=posttype]:radio").change(function () {
 		$("#profile").empty();
@@ -22,7 +49,6 @@ $(document).ready(function(){
 	
             $('#submit_post').click(function(){
                 var post=$("#post").val();
-                //alert($('input[name="posttype"]:checked', '#ridepost').val());
                 var posttype= $('input[name="posttype"]:checked', '#ridepost').val();
                 $.ajax({
                     url:'postController',
@@ -63,28 +89,7 @@ $(document).ready(function(){
             									'</div></div>'
             								);
                     					
-                    					/*$("#profile").prepend('<div class="thumbnail thumbnail-post">'+            						
-                    							'<div class="caption">'+
-                    							'<div class="media">'+
-                    							'<div class="media-left">'+
-                    							'<a href="#" class="image-post"> <img data-src="resources/js/holder.js/50x50?theme=social"></a></div>'+
-                    							'<div class="media-body">'+
-                    							'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
-                    							'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
-                    							'</div></div>'+			
-                    							'<p>'+item.post+'</p><p></div>'+
-            									'<div class="links-post">'+
-            									'<span class="fa fa-thumbs-o-up link-post active"></span>'+
-            									'<a href="#" class="link-post active" role="button" data-like-postid="'+item.postid+'">Like</a>'+
-            									'<span id="likeCount'+item.postid+'" >Count</span><span class="fa fa-comment link-post"></span>'+
-            									'<a href="#" role="button" class="commentopenId" data-postid="'+item.postid+'">Comment</a>'+
-            									'<span id="commentsCount'+item.postid+'" >Com Count</span>'+
-            									'<span class="fa fa-reply link-post"></span>'+
-            									'<a href="#" class="delete-post" role="button" data-del-postid="'+item.postid+'">Delete</a></div>'+
-            									'<div id ="comentContainer_'+item.postid+'" >'+
-            									'</div>'+
-            									'</div></div>'
-                    					);*/
+                    				
                     					var likeCount = getLikeCount(item.postid);
                         				getCommentsCount(item.postid);
                     				}
@@ -263,8 +268,7 @@ function load25PostByType(){
 	var newval=(Number(firstResult)+Number(maxResults));
     console.log(firstResult+" : "+maxResults+", new firstResult "+ Number(newval));
     var posttype= $('input[name="posttype"]:checked', '#ridepost').val();
-//    $("input[id=firstResult]").val(Number(newval))
-    
+    var counter=0;
 	$.ajax({
         url:'postActivityController',
         type:'get',
@@ -275,11 +279,9 @@ function load25PostByType(){
             $.each( data, function( key, value ) {
             		if(key=="posts"){
             			$.each(value, function(index, item){
-            				//console.log(item);
+ 
             				var user = objectFindByKey(data.users,"userid", item.userid);
-            				//console.log(user);
-            				//var likeCount = getLikeCount(item.postid);
-            				//console.log(likeCount);
+            			
             				$("#profile").append('<div class="thumbnail thumbnail-post getId" data-postid="'+item.postid+'" id="post_'+item.postid+'" >'+             						
             						'<div class="caption">'+
             							'<div class="media">'+
@@ -301,10 +303,15 @@ function load25PostByType(){
 									'<div id ="comentContainer_'+item.postid+'" >'+
 									'</div>'+
 									'</div></div>'
+									
+									
 								);
-
+            				$("#postcounter").attr("data-counter",counter++);//to getcounter for posts
+            				
             				var likeCount = getLikeCount(item.postid);
             				getCommentsCount(item.postid);
+            				
+            				
             			})
             		}
             	});
@@ -312,6 +319,7 @@ function load25PostByType(){
         }
         
     });
+	
 }
 
 function getLikeCount(postid){
@@ -361,6 +369,7 @@ function loadAll(){
 								);
 
             			})
+            		
             		}
             	});
         }
@@ -378,3 +387,72 @@ function objectFindByKey(jsonObj, searchField, searchVal) {
     }
     return results[0];
 }
+
+
+//test
+function loadinfinitePostByType(){
+	var firstResult =parseInt( $("#postcounter").attr("data-counter"));
+	var maxResults = firstResult+5;
+	firstResult = (firstResult==0)?0:firstResult;
+	maxResults = (maxResults==0)?25:maxResults;
+	var newval=(Number(firstResult)+Number(maxResults));
+    console.log(firstResult+" : "+maxResults+", new firstResult "+ Number(newval));
+    var posttype= $('input[name="posttype"]:checked', '#ridepost').val();
+    var counter=firstResult;
+	$.ajax({
+        url:'postActivityController',
+        type:'get',
+        data:{maxResults:maxResults,firstResult:firstResult,posttype:posttype},
+        dataType: 'json',
+        success: function(data) { 
+        	$("#post").val("");
+            $.each( data, function( key, value ) {
+            		if(key=="posts"){
+            			$.each(value, function(index, item){
+ 
+            				var user = objectFindByKey(data.users,"userid", item.userid);
+            			
+            				$("#profile").append('<div class="thumbnail thumbnail-post getId" data-postid="'+item.postid+'" id="post_'+item.postid+'" >'+             						
+            						'<div class="caption">'+
+            							'<div class="media">'+
+            								'<div class="media-left">'+
+            									'<a href="#" class="image-post"> <img data-src="resources/js/holder.js/50x50?theme=social"></a></div>'+
+            								'<div class="media-body">'+
+            									'<a class="media-heading title-post" href="#">'+user.fullname+'</a>'+
+            						'<h5 class="time-post">'+moment(item.dateupdated).format("DD-MM-YYYY HH:mm:ss")+'</h5>'+
+            						'</div></div>'+			
+            						'<p>'+item.post+'</p><p></div>'+
+									'<div class="links-post">'+
+									'<span class="fa fa-thumbs-o-up link-post active"></span>'+
+									'<a href="#" class="link-post active" role="button" data-like-postid="'+item.postid+'">Like</a>'+
+									'<span id="likeCount'+item.postid+'" >Count</span><span class="fa fa-comment link-post"></span>'+
+									'<a href="#" role="button" class="commentopenId" data-postid="'+item.postid+'">Comment</a>'+
+									'<span id="commentsCount'+item.postid+'" >Com Count</span>'+
+									'<span class="fa fa-reply link-post"></span>'+
+									'<a href="#" class="delete-post" role="button" data-del-postid="'+item.postid+'">Delete</a></div>'+
+									'<div id ="comentContainer_'+item.postid+'" >'+
+									'</div>'+
+									'</div></div>'
+								);
+
+            				var likeCount = getLikeCount(item.postid);
+            				getCommentsCount(item.postid);
+            				
+                			$("#postcounter").attr("data-counter",counter++);
+            			})
+            		}
+            	});
+            
+        }
+        
+    });
+}
+
+
+
+
+
+
+
+
+

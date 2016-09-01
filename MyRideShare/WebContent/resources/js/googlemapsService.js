@@ -14,17 +14,12 @@ var GoogleMapService = (function () {
         mapDiv = mapDivParam;
         defaultLocation = new google.maps.LatLng(defaultLatitude, defaultLongitude);
 
-        initGoogleMapWithLocation(defaultLocation);
+        return initGoogleMapWithLocation(defaultLocation);
     }
 
-    function initGoogleMapPlaceAutoComplete(originInputControl, destinationInputControl) {
-        const googleMap = initGoogleMapWithLocation(defaultLocation);
-
-        const originAutoComplete = new google.maps.places.Autocomplete(originInputControl);
-        originAutoComplete.bindTo('bounds', googleMap);
-
-        const destinationAutoComplete = new google.maps.places.Autocomplete(destinationInputControl);
-        destinationAutoComplete.bindTo('bounds', googleMap);
+    function initGoogleMapPlaceAutoComplete(googleMap, inputControl) {
+        const inputAutoComplete = new google.maps.places.Autocomplete(inputControl);
+        inputAutoComplete.bindTo('bounds', googleMap);
     }
 
     function initGoogleMapWithLocation(location) {
@@ -171,10 +166,10 @@ var GoogleMapService = (function () {
                     });
             }
             else if ((status === "NOT_FOUND") || (status === "ZERO_RESULTS")) {
-                alert("Route Not Found!");
+                alert("Route Not Found!   " + originAddress + " ==> " + destinationAddress);
             }
             else {
-                alert("Directions request failed due to: " + status);
+                alert("Directions request failed due to: " + status + "    " +originAddress + " ==> " + destinationAddress);
             }
         });
     }
@@ -270,6 +265,7 @@ var GoogleMapService = (function () {
         showWeatherForecastByAddress: showWeatherForecastByAddress,
         showWeatherForecastByLocation: showWeatherForecastByLocation,
         initGoogleMapPlaceAutoComplete: initGoogleMapPlaceAutoComplete,
+        defaultLocation: defaultLocation,
         googleMapKey: googleMapKey
     }
 

@@ -2862,7 +2862,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		// returns object containing all elements with an id and the root element
 		return returnObject
-	}
+	};
+
 
 
 /***/ },

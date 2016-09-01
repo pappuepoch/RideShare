@@ -13,7 +13,7 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <link href="resources/css/font-awesome.min.css" rel="stylesheet">
 <link href="resources/css/style.css" rel="stylesheet">
-<link href="resources/css/wall.css" rel="stylesheet">
+<!-- <link href="resources/css/wall.css" rel="stylesheet"> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 <script type="text/javascript" src="resources/js/post.js"></script>
 <script type="text/javascript" src="resources/js/moment.js"></script>
@@ -41,6 +41,7 @@
 						</textarea><br>
 						<input type="radio" name="posttype" value="1" checked/> Post a Ride
 				  		<input type="radio" name="posttype" value="2"/> Get a Ride  
+				  		<input type="hidden" id="postcounter" data-counter=""/>
 				  		<label id="getLocation"	></label>	
 				  		
 				  	</form>

@@ -45,13 +45,14 @@
         
         <div class="col-sm-12">
             <div class="thumbnail thumbnail-grand-profile">
-              <img src="resources/img/wall.jpg" style="width:100%;height:300px;background: #675E5E;" alt="Green Life">
+              <img src="resources/img/wall.jpg" style="width:100%;height:300px; display: block; background: #675E5E;" alt="Green Life">
               <div class="caption caption-grand-profile">
               </div>
               <ul class="nav nav-pills nav-grand-profile">
                   <li role="presentation" class="active"><a href="views/wall.jsp">Home</a></li>
                   <li role="presentation"><a href="views/location.jsp">Weather</a></li>
                   <li role="presentation"><a href="views/locationpost.jsp">Post</a></li>
+                  <li role="presentation"><a href="views/draw.jsp">Trips</a></li>
   
              
               </ul>

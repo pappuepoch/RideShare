@@ -26,7 +26,7 @@
     <div class="container">
         <div class="row">
 
-        <form action="signup" method="post" id="form">
+        <form action="signup" method="post" id="formId">
             <div >
                 <label id="lblError"></label>
                 

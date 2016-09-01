@@ -14,8 +14,11 @@ var GoogleMapServiceFacade = (function () {
     }
 
     function initGoogleMapServiceFacade_Prod() {
-        GoogleMapService.initGoogleMapService(googleMapKey, openWeatherMapKey, mapDiv, 30.064742, 31.249509);       //Set the DefaultLocation Cairo Location
-        GoogleMapService.initGoogleMapPlaceAutoComplete($("#txt_originAddress")[0], $("#txt_destinationAddress")[0]);
+    	const googleMap = GoogleMapService.initGoogleMapService(googleMapKey, openWeatherMapKey, mapDiv, 30.064742, 31.249509);       //Set the DefaultLocation Cairo Location
+        
+        GoogleMapService.initGoogleMapPlaceAutoComplete(googleMap, $("#txt_originAddress")[0]);
+        GoogleMapService.initGoogleMapPlaceAutoComplete(googleMap, $("#txt_destinationAddress")[0]);
+        
         
         $("#btn_findRoute")
         .click(function () {
@@ -23,8 +26,6 @@ var GoogleMapServiceFacade = (function () {
             const destinationAddress = $("#txt_destinationAddress").val();
             
             GoogleMapService.findRouteByAddress(originAddress, destinationAddress, null, function (e) {
-            	
-            	
             	
             $("#originAddressLatitude").val( e.OriginAddressLatitude);
             $("#originAddressLongitude").val( e.OriginAddressLongitude);
